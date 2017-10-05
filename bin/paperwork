@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+import PrettyError from 'pretty-error';
+import chalk from 'chalk';
+import start from '../foundation/console/start';
+
+process.stdout.write('\x1B[2J\x1B[0f\u001b[0;0H');
+
+const run = async (module, options) => {
+  const task = typeof module.default === 'undefined' ? module : module.default;
+  const start = new Date();
+
+  try {
+    const resolution = await task(options);
+    const end = new Date();
+    const time = end.getTime() - start.getTime();
+  } catch (exception) {
+    const pretty = new PrettyError();
+    console.error(pretty.render(exception))
+  }
+};
+
+delete require.cache[__filename];
+
+const command = process.argv[2] || 'start';
+
+switch (command.toLowerCase()) {
+  case 'start':
+    run(start);
+    break;
+  case 'build':
+  default:
+    throw new Error();
+}
