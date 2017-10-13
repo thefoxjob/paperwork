@@ -1,8 +1,8 @@
 {
-  "name": "paperwork",
-  "version": "0.0.1-alpha.1",
+  "name": "@thefoxjob/paperwork",
+  "version": "0.0.1-alpha.3",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/bin/paperwork",
   "scripts": {
     "prepublish": "npm run release",
     "release": "gulp",
@@ -10,32 +10,55 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Edward Khor",
-  "license": "ISC",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "paperwork": "./dist/bin/paperwork"
+  },
   "devDependencies": {
+    "gulp": "gulpjs/gulp#4.0",
+    "gulp-babel": "^7.0.0",
+    "gulp-notify": "^3.0.0"
+  },
+  "dependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-dynamic-import-webpack": "^1.0.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
+    "babel-runtime": "^6.26.0",
     "chalk": "^2.1.0",
+    "clui": "^0.3.6",
+    "connect-redis": "^3.3.2",
+    "cookie-parser": "^1.4.3",
     "css-loader": "^0.28.7",
+    "deepmerge": "^1.5.2",
+    "ejs": "^2.5.7",
+    "error-stack-parser": "^2.0.1",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.5",
-    "gulp": "gulpjs/gulp#4.0",
-    "gulp-babel": "^7.0.0",
-    "gulp-notify": "^3.0.0",
+    "friendly-errors-webpack-plugin": "^1.6.1",
     "happypack": "^4.0.0",
+    "hiredis": "^0.5.0",
+    "html-webpack-plugin": "^2.30.1",
+    "memorystore": "^1.5.1",
+    "mongoose": "^4.12.1",
     "node-sass": "^4.5.3",
     "null-loader": "^0.1.1",
     "postcss-loader": "^2.0.6",
     "pretty-error": "^2.1.1",
     "raw-loader": "^1.0.0-beta.0",
     "react-error-overlay": "^2.0.2",
-    "react-hot-loader": "^1.3.1",
+    "react-hot-loader": "next",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
@@ -44,10 +67,7 @@
     "webpack-error-notification": "^0.1.7",
     "webpack-hot-middleware": "^2.19.1",
     "webpack-node-externals": "^1.6.0",
-    "whatwg-fetch": "^2.0.3"
-  },
-  "dependencies": {
-    "deepmerge": "^1.5.2",
-    "express": "^4.16.1"
+    "whatwg-fetch": "^2.0.3",
+    "winston": "^2.4.0"
   }
 }

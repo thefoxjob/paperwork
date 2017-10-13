@@ -4,28 +4,39 @@ import PrettyError from 'pretty-error';
 import chalk from 'chalk';
 import start from '../foundation/console/start';
 
-process.stdout.write('\x1B[2J\x1B[0f\u001b[0;0H');
+process.stdout.write(chalk.green('-'.repeat(120)));
+process.stdout.write('\x1B[2J\n\x1B[0f\u001b[0;0H');
 
 const run = async (module, options) => {
+  const pretty = new PrettyError();
   const task = typeof module.default === 'undefined' ? module : module.default;
   const start = new Date();
+
+  pretty.start();
 
   try {
     const resolution = await task(options);
     const end = new Date();
     const time = end.getTime() - start.getTime();
   } catch (exception) {
-    const pretty = new PrettyError();
-    console.error(pretty.render(exception))
+    if (exception) {
+      console.error(exception)
+    }
   }
 };
 
 delete require.cache[__filename];
 
-const command = process.argv[2] || 'start';
+let command = process.argv[2];
+
+if ( ! command || command.startsWith('--')) {
+  command = 'start';
+}
 
 switch (command.toLowerCase()) {
   case 'start':
+    process.env.NODE_ENV = 'development';
+
     run(start);
     break;
   case 'build':

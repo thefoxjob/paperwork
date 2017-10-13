@@ -1,44 +1,138 @@
 /* eslint-disable no-console */
+import ErrorStackParser from 'error-stack-parser';
+import RequestShortener from 'webpack/lib/RequestShortener';
 import chalk from 'chalk';
+import clui from 'clui';
 import express from 'express';
 import path from 'path';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
+import config from '../config';
 import webpackConfig from '../webpack.config';
 
 
+const requestShortener = new RequestShortener(process.cwd());
+
+const options = {
+  // ignored: /node_modules/,
+};
+
+const transformWebpackCompilationError = (error) => {
+  if (error.dependencies && error.dependencies.length > 0 && error.name === 'ModuleNotFoundError' && error.message.indexOf('Module not found') === 0) {
+    const dependencies = [];
+    const relatives = [];
+
+
+    error.dependencies.map(dependency => {
+      if (dependency.request.startsWith('./') || dependency.request.startsWith('../')) {
+        relatives.push(dependency);
+      } else {
+        dependencies.push(dependency);
+      }
+
+    });
+
+    if (dependencies.length > 0) {
+      const file = error.file || error.module.readableIdentifier(requestShortener);
+
+      console.error(` > ${ chalk.bgRed(' Error ') } ${ dependencies.length > 1 ? 'These dependencies were' : 'This dependency was' } not found:`)
+      dependencies.map(dependency => console.error(`   * ${ dependency.request } ${ chalk.cyan(`in ${ file }`) }`));
+    }
+
+    if (relatives.length > 0) {
+      const file = error.file || error.module.readableIdentifier(requestShortener);
+
+      console.error(` > ${ chalk.bgRed(' Error ') } ${ relatives.length > 1 ? 'These relative modules were' : 'This module was' } not found:`)
+      relatives.map(relative => console.error(`   * ${ relative.request } ${ chalk.cyan(`in ${ file }`) }`));
+    }
+
+  } else if (error.name === 'ModuleBuildError' && error.message.indexOf('SyntaxError') >= 0) {
+  }
+};
+
 const createCompilationPromise = (name, compiler, config) => new Promise((resolve, reject) => {
+  const progress = new clui.Spinner(`${ chalk.bgBlue(' Compiling ') } ${ name } script...`);
   let start = new Date();
 
   compiler.plugin('compile', () => {
     start = new Date();
+    progress.start();
   });
 
   compiler.plugin('done', (stats) => {
     const end = new Date();
     const time = end.getTime() - start.getTime();
 
-    if (stats.hasErrors()) {
-      console.error(chalk.bgRed(`Failed to compile '${ name } after ${ time }ms`));
+    progress.stop();
 
-      return reject(new Error('Compilation failed'));
+    if (stats.hasErrors() || stats.hasWarnings()) {
+      if (stats.hasErrors()) {
+        console.error(`${ chalk.bgRed(' Error ') } ${ name } script failed to compile`);
+        stats.compilation.errors.map(error => transformWebpackCompilationError(error));
+
+        return reject();
+      }
     }
 
-    console.info(chalk.bgGreen(`'${ name } compiled successfully at ${ time }ms`));
+    console.info(`${ chalk.bgGreen(' Done ') } ${ name } script compiled successfully in ${ time }ms`);
 
     return resolve(stats);
   });
 });
 
+const checkForUpdate = (app, update) => {
+  const prefix = '[\x1b[35mHMR\x1b[0m]';
+
+  if ( ! app.hot) {
+    // TODO: error 'hot module replacement is disabled.'
+  }
+
+  if (app.hot.status() !== 'idle') {
+    return Promise.resolve();
+  }
+
+  return app.hot.check(true)
+    .then(modules => {
+      if ( ! modules) {
+        if (update) {
+          console.info(`${ prefix } updated applied.`);
+        }
+
+        return;
+      }
+
+      if (modules.length === 0) {
+        console.info(`${ prefix } nothing hot update.`)
+      } else {
+        console.info(`${ prefix } updated modules:`);
+        modules.forEach(id => console.info(`${ prefix } - ${ id }`));
+
+        checkForUpdate(app, true);
+      }
+    })
+    .catch(error => {
+      if (['abort', 'fail'].includes(app.hot.status())) {
+        console.warn(`${ prefix } cannot apply update.`);
+        delete require.cache[require.resolve('../core/server')];
+
+        app = require('../core/server');
+        console.warn(`${ prefix } app has been reloaded.`);
+      } else {
+        console.warn(`${ prefix } update failed: ${ error.stack || error.message }`);
+      }
+    });
+}
+
 let server = null;
 
-const execute = () => {
+const execute = async () => {
   if (server) {
     return server;
   }
 
+  const app = { instance: null, promise: null, resolved: true };
   const compilers = { client: null, server: null };
   const promises = { client: null, server: null };
 
@@ -55,6 +149,7 @@ const execute = () => {
   server.use(webpackDevMiddleware(compilers.client, {
     publicPath: webpackConfig.client.output.publicPath,
     quiet: true,
+    options,
   }));
 
   server.use(webpackHotMiddleware(compilers.client, { log: false }));
@@ -63,7 +158,36 @@ const execute = () => {
     if ( ! app.resolved) {
       return;
     }
+
+    app.resolved = false;
+    app.promise = new Promise(resolve => (app.resolve = resolve));
   });
+
+  server.use((request, response) => {
+    app.promise.then(() => app.instance.handle(request, response))
+      .catch(error => console.error(error));
+  });
+
+  compilers.server.watch(options, (error, stats) => {
+    if (app.instance && ! error && ! stats.hasErrors()) {
+      checkForUpdate(app.instance).then(() => {
+        app.resolved = true;
+        app.resolve();
+      });
+    }
+  });
+
+  try {
+    await promises.client;
+    await promises.server;
+
+    app.instance = require(path.resolve(process.cwd(), './build/server'));
+
+    server.listen(config.secure.application.port, () => {
+      console.info(` > Ready on port ${ config.secure.application.port }`);
+    });
+  } catch (error) {
+  }
 };
 
 export default execute;

@@ -1,5 +1,6 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HappyPack from 'happypack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import nodeExternals from 'webpack-node-externals';
 import path from 'path';
 import webpack from 'webpack';
@@ -16,6 +17,7 @@ const configuration = {
       {
         test: /\.(js|jsx)?$/,
         use: 'happypack/loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.(scss|css)$/,
@@ -72,7 +74,8 @@ const configuration = {
     }),
   ],
   resolve: {
-    modules: ['node_modules', 'src'],
+    extensions: ['.js', '.jsx', '.json'],
+    modules: ['node_modules', './'],
   },
   stats: {
     cached: false,
@@ -82,7 +85,7 @@ const configuration = {
     colors: true,
     hash: false,
     modules: false,
-    reasons: config.debug,
+    reasons: true,
     timings: false,
     version: false,
   },
@@ -92,7 +95,7 @@ const client = {
   ...configuration,
   entry: {
     client: [
-      'babel-polyfill', 'whatwg-fetch', path.resolve(__dirname, './core/client.js'),
+      'babel-polyfill', 'whatwg-fetch', path.resolve(__dirname, './core/client/index.js'),
       ...config.debug ? [
         'react-error-overlay',
         'react-hot-loader/patch',
@@ -113,6 +116,14 @@ const client = {
   plugins: [
     ...configuration.plugins,
     new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
+    new HtmlWebpackPlugin({
+      filename: 'top.ejs',
+      template: path.resolve(__dirname, './templates/top.ejs'),
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'bottom.ejs',
+      template: path.resolve(__dirname, './templates/bottom.ejs'),
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': config.debug ? '"development"' : '"production"',
       'process.env.BROWSER': true,
@@ -156,7 +167,7 @@ const client = {
 const server = {
   ...configuration,
   entry: {
-    server: ['babel-polyfill', '../framework/server/index.js'],
+    server: ['babel-polyfill', path.resolve(__dirname, './core/server/index.js')],
   },
   externals: [
     nodeExternals({ whitelist: [/\.(scss|css)$/, /\.(png|jpg)$/] }),
@@ -190,7 +201,7 @@ const server = {
     ] : [],
   ],
   resolve: {
-    ...config.resolve,
+    ...configuration.resolve,
   },
   target: 'node',
 };

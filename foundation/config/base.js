@@ -2,6 +2,7 @@ import path from 'path';
 
 
 export default {
+  debug: ! process.env.NODE_ENV || process.argv.includes('--debug'),
   references: {
     countries: [],
     currencies: [],
@@ -17,6 +18,11 @@ export default {
         driver: 'redis',
         option: {
         },
+      },
+    },
+    database: {
+      mongoose: {
+        uri: 'mongodb://localhost:27010',
       },
     },
     server: {
