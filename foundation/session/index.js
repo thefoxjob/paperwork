@@ -1,6 +1,6 @@
 import middleware from './middleware';
 
 
-export {
+export default {
   middleware,
 };

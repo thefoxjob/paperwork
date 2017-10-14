@@ -1,9 +1,9 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HappyPack from 'happypack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import nodeExternals from 'webpack-node-externals';
 import path from 'path';
 import webpack from 'webpack';
+import { StatsWriterPlugin } from 'webpack-stats-plugin';
 
 import config from './config';
 
@@ -72,6 +72,7 @@ const configuration = {
       loaders: ['babel-loader'],
       verbose: false,
     }),
+    new StatsWriterPlugin({ fields: ['chunks', 'publicPath'] }),
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
@@ -110,20 +111,12 @@ const client = {
   output: {
     chunkFilename: config.debug ? '[name].chunk.js' : '[name].[chunkhash:8].chunk.js',
     filename: config.debug ? '[name].js' : '[name].[chunkhash:8].chunk.js',
-    path: path.resolve(process.cwd(), 'build/assets'),
+    path: path.resolve(process.cwd(), 'public/build'),
     publicPath: '/build/',
   },
   plugins: [
     ...configuration.plugins,
     new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
-    new HtmlWebpackPlugin({
-      filename: 'top.ejs',
-      template: path.resolve(__dirname, './templates/top.ejs'),
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'bottom.ejs',
-      template: path.resolve(__dirname, './templates/bottom.ejs'),
-    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': config.debug ? '"development"' : '"production"',
       'process.env.BROWSER': true,

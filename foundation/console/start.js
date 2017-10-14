@@ -31,7 +31,6 @@ const transformWebpackCompilationError = (error) => {
       } else {
         dependencies.push(dependency);
       }
-
     });
 
     if (dependencies.length > 0) {
@@ -49,6 +48,10 @@ const transformWebpackCompilationError = (error) => {
     }
 
   } else if (error.name === 'ModuleBuildError' && error.message.indexOf('SyntaxError') >= 0) {
+    console.error(` > ${ chalk.bgRed(' Error ') } Syntax Error: `);
+    console.error(`    * ${ error.message }`);
+  } else {
+    console.error(` > ${ chalk.bgRed( ' Error ') } ${ error.message }`);
   }
 };
 
@@ -137,7 +140,7 @@ const execute = async () => {
   const promises = { client: null, server: null };
 
   server = express();
-  server.use(express.static(path.resolve(__dirname, '../../public')));
+  server.use(express.static(config.secure.application.public));
 
   const compile = webpack([webpackConfig.client, webpackConfig.server]);
   compilers.client = compile.compilers.find(compiler => compiler.name === 'client');
@@ -146,12 +149,14 @@ const execute = async () => {
   promises.client = createCompilationPromise('client', compilers.client, webpackConfig.client);
   promises.server = createCompilationPromise('server', compilers.server, webpackConfig.server);
 
-  server.use(webpackDevMiddleware(compilers.client, {
+  const devMiddleware = webpackDevMiddleware(compilers.client, {
+    options,
     publicPath: webpackConfig.client.output.publicPath,
     quiet: true,
-    options,
-  }));
+    serverSideRender: true,
+  });
 
+  server.use(devMiddleware);
   server.use(webpackHotMiddleware(compilers.client, { log: false }));
 
   compilers.server.plugin('compile', () => {
@@ -164,7 +169,9 @@ const execute = async () => {
   });
 
   server.use((request, response) => {
-    app.promise.then(() => app.instance.handle(request, response))
+    response.locals.webpackDevMiddleware = devMiddleware;
+    app.promise
+      .then(() => app.instance.handle(request, response))
       .catch(error => console.error(error));
   });
 
@@ -181,12 +188,16 @@ const execute = async () => {
     await promises.client;
     await promises.server;
 
-    app.instance = require(path.resolve(process.cwd(), './build/server'));
+    app.instance = require(path.resolve(process.cwd(), './build/server/server')).default;
+    app.resolved = true;
+    app.resolve();
 
     server.listen(config.secure.application.port, () => {
       console.info(` > Ready on port ${ config.secure.application.port }`);
     });
   } catch (error) {
+    console.error(`${ chalk.bgRed(' Error ') } Compilation failed`);
+    console.error(error);
   }
 };
 

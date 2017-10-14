@@ -22,13 +22,13 @@ export default {
     },
     database: {
       mongoose: {
-        uri: 'mongodb://localhost:27010',
+        uri: 'mongodb://localhost:27017',
       },
     },
     server: {
     },
     session: {
-      secret: 'notsosecretsecret',
+      secret: 'important_change_this',
       age: 720000,
       cache: 'session',
     },

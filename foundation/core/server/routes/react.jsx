@@ -1,16 +1,21 @@
 import React from 'react';
-import ReactDOM from 'react-dom/server';
+import ReactDOMServer from 'react-dom/server';
+import fs from 'fs';
+import path from 'path';
 import { StaticRouter } from 'react-router';
 
 import Application from '../../client/components/Application';
+import config from '../../../config';
 import template from '../../../templates';
 
 
 export default (app) => {
   app.use('*', (request, response, next) => {
+    let stats = null;
+    const assets = { scripts: [], stylesheets: [] };
     const context = {};
 
-    const html = ReactDOM.server.renderToString(
+    const html = ReactDOMServer.renderToString(
       <StaticRouter
         location={ request.url }
         context={ context }
@@ -19,6 +24,23 @@ export default (app) => {
       </StaticRouter>
     );
 
-    return response.status(200).render('index');
+    if (response.locals.webpackDevMiddleware) {
+      stats = JSON.parse(response.locals.webpackDevMiddleware.fileSystem.readFileSync(path.resolve(config.secure.application.public, './build/stats.json')).toString());
+    } else if (fs.existsSync(path.resolve(config.secure.application.public, './build/stats.json'))) {
+    }
+
+    stats.chunks.forEach(chunk => chunk.files.forEach((file) => {
+      if (/.css($|\?)/.test(file)) {
+        assets.stylesheets.push(path.join(stats.publicPath, file));
+      } else if (/.js($|\?)/.test(file)) {
+        if (chunk.entry) {
+          assets.scripts.unshift(path.join(stats.publicPath, file));
+        } else {
+          assets.scripts.push(path.join(stats.publicPath, file));
+        }
+      }
+    }));
+
+    return response.status(200).render('index', { assets, config, html });
   });
 };
