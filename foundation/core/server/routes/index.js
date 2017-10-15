@@ -1,4 +1,4 @@
-import react from './react.jsx';
+import react from './react';
 
 const routes = [react];
 
