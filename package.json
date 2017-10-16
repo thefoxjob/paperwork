@@ -4,7 +4,8 @@
   "description": "",
   "main": "./dist/bin/paperwork",
   "scripts": {
-    "prepublish": "npm run release",
+    "lint": "eslint . --ext js,jsx",
+    "prepublish": "npm run release && npm run lint",
     "release": "gulp",
     "start": "gulp watch",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,9 +19,17 @@
     "paperwork": "./dist/bin/paperwork"
   },
   "devDependencies": {
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-babel": "^7.0.0",
-    "gulp-notify": "^3.0.0"
+    "gulp-notify": "^3.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-router": "^4.2.0"
   },
   "dependencies": {
     "babel": "^6.23.0",
@@ -41,7 +50,6 @@
     "css-loader": "^0.28.7",
     "deepmerge": "^1.5.2",
     "ejs": "^2.5.7",
-    "error-stack-parser": "^2.0.1",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "extract-text-webpack-plugin": "^3.0.0",
@@ -69,5 +77,10 @@
     "webpack-stats-plugin": "^0.1.5",
     "whatwg-fetch": "^2.0.3",
     "winston": "next"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-router": "^4.2.0"
   }
 }

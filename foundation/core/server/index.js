@@ -1,4 +1,3 @@
-import HttpRequest from 'request';
 import chalk from 'chalk';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -13,6 +12,7 @@ import session from '../../session';
 const promises = { route: null };
 
 if (config.secure.database.mongoose) {
+  // eslint-disable-next-line global-require
   const mongoose = require('mongoose');
   mongoose.connect(config.secure.database.mongoose.uri, Object.assign(config.secure.database.mongoose.options || {}, { useMongoClient: true }));
   mongoose.connection.on('error', error => log.error(`${ chalk.bgRed(' ERROR ') } mongoose unable connect to the mongodb: ${ error }`));
@@ -29,6 +29,7 @@ app.use(session.middleware(config.secure.session));
 app.use(express.static(config.secure.application.public));
 
 try {
+  // eslint-disable-next-line global-require, import/no-dynamic-require
   const middleware = require(path.resolve(process.cwd(), './middleware/server.js'));
   middleware(app);
 } catch (error) {
@@ -39,6 +40,7 @@ promises.route = routes.setup(app);
 
 if ( ! module.hot) {
   promises.route.then(() => app.listen(config.secure.application.port, () => {
+    // eslint-disable-next-line no-console
     console.info(`The server is running on port ${ config.secure.application.port }`);
   }));
 } else {

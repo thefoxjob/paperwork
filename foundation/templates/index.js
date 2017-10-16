@@ -2,9 +2,11 @@ import ejs from 'ejs';
 import fs from 'fs';
 import path from 'path';
 
+import config from '../config';
+
 
 export default {
-  render: (location, data, options) => {
+  render: (location, data) => {
     let file = null;
 
     if (fs.existsSync(location)) {

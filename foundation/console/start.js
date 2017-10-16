@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import ErrorStackParser from 'error-stack-parser';
 import RequestShortener from 'webpack/lib/RequestShortener';
 import chalk from 'chalk';
 import clui from 'clui';
@@ -25,7 +24,7 @@ const transformWebpackCompilationError = (error) => {
     const relatives = [];
 
 
-    error.dependencies.map(dependency => {
+    error.dependencies.forEach((dependency) => {
       if (dependency.request.startsWith('./') || dependency.request.startsWith('../')) {
         relatives.push(dependency);
       } else {
@@ -36,17 +35,16 @@ const transformWebpackCompilationError = (error) => {
     if (dependencies.length > 0) {
       const file = error.file || error.module.readableIdentifier(requestShortener);
 
-      console.error(` > ${ chalk.bgRed(' Error ') } ${ dependencies.length > 1 ? 'These dependencies were' : 'This dependency was' } not found:`)
+      console.error(` > ${ chalk.bgRed(' Error ') } ${ dependencies.length > 1 ? 'These dependencies were' : 'This dependency was' } not found:`);
       dependencies.map(dependency => console.error(`   * ${ dependency.request } ${ chalk.cyan(`in ${ file }`) }`));
     }
 
     if (relatives.length > 0) {
       const file = error.file || error.module.readableIdentifier(requestShortener);
 
-      console.error(` > ${ chalk.bgRed(' Error ') } ${ relatives.length > 1 ? 'These relative modules were' : 'This module was' } not found:`)
+      console.error(` > ${ chalk.bgRed(' Error ') } ${ relatives.length > 1 ? 'These relative modules were' : 'This module was' } not found:`);
       relatives.map(relative => console.error(`   * ${ relative.request } ${ chalk.cyan(`in ${ file }`) }`));
     }
-
   } else if (error.name === 'ModuleBuildError' && error.message.indexOf('SyntaxError') >= 0) {
     console.error(` > ${ chalk.bgRed(' Error ') } Syntax Error: `);
     console.error(`    * ${ error.message }`);
@@ -55,7 +53,7 @@ const transformWebpackCompilationError = (error) => {
   }
 };
 
-const createCompilationPromise = (name, compiler, config) => new Promise((resolve, reject) => {
+const createCompilationPromise = (name, compiler) => new Promise((resolve, reject) => {
   const progress = new clui.Spinner(`${ chalk.bgBlue(' Compiling ') } ${ name } script...`);
   let start = new Date();
 
@@ -97,7 +95,7 @@ const checkForUpdate = (app, update) => {
   }
 
   return app.hot.check(true)
-    .then(modules => {
+    .then((modules) => {
       if ( ! modules) {
         if (update) {
           console.info(`${ prefix } updated applied.`);
@@ -107,7 +105,7 @@ const checkForUpdate = (app, update) => {
       }
 
       if (modules.length === 0) {
-        console.info(`${ prefix } nothing hot update.`)
+        console.info(`${ prefix } nothing hot update.`);
       } else {
         console.info(`${ prefix } updated modules:`);
         modules.forEach(id => console.info(`${ prefix } - ${ id }`));
@@ -115,18 +113,19 @@ const checkForUpdate = (app, update) => {
         checkForUpdate(app, true);
       }
     })
-    .catch(error => {
+    .catch((error) => {
       if (['abort', 'fail'].includes(app.hot.status())) {
         console.warn(`${ prefix } cannot apply update.`);
         delete require.cache[require.resolve('../core/server')];
 
+        // eslint-disable-next-line global-require, no-param-reassign
         app = require('../core/server');
         console.warn(`${ prefix } app has been reloaded.`);
       } else {
         console.warn(`${ prefix } update failed: ${ error.stack || error.message }`);
       }
     });
-}
+};
 
 let server = null;
 
@@ -165,7 +164,9 @@ const execute = async () => {
     }
 
     app.resolved = false;
-    app.promise = new Promise(resolve => (app.resolve = resolve));
+    app.promise = new Promise((resolve) => {
+      app.resolve = resolve;
+    });
   });
 
   server.use((request, response) => {
@@ -188,6 +189,7 @@ const execute = async () => {
     await promises.client;
     await promises.server;
 
+    // eslint-disable-next-line global-require, import/no-dynamic-require
     app.instance = require(path.resolve(process.cwd(), './build/server/server')).default;
     app.resolved = true;
     app.resolve();
@@ -195,9 +197,13 @@ const execute = async () => {
     server.listen(config.secure.application.port, () => {
       console.info(` > Ready on port ${ config.secure.application.port }`);
     });
+
+    return true;
   } catch (error) {
     console.error(`${ chalk.bgRed(' Error ') } Compilation failed`);
     console.error(error);
+
+    return false;
   }
 };
 
