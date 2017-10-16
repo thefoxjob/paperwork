@@ -2,7 +2,7 @@
 
 import PrettyError from 'pretty-error';
 import chalk from 'chalk';
-import start from '../foundation/console/start';
+import command from '../foundation/console';
 
 process.stdout.write(chalk.green('-'.repeat(120)));
 process.stdout.write('\x1B[2J\n\x1B[0f\u001b[0;0H');
@@ -10,36 +10,38 @@ process.stdout.write('\x1B[2J\n\x1B[0f\u001b[0;0H');
 const run = async (module, options) => {
   const pretty = new PrettyError();
   const task = typeof module.default === 'undefined' ? module : module.default;
-  const start = new Date();
 
   pretty.start();
 
   try {
-    const resolution = await task(options);
-    const end = new Date();
-    const time = end.getTime() - start.getTime();
+    await task(options);
   } catch (exception) {
     if (exception) {
-      console.error(exception)
+      // eslint-disable-next-line no-console
+      console.error(exception);
     }
   }
 };
 
+// eslint-disable-next-line no-underscore-dangle
 delete require.cache[__filename];
 
-let command = process.argv[2];
+let name = process.argv[2];
 
-if ( ! command || command.startsWith('--')) {
-  command = 'start';
+if ( ! name || name.startsWith('--')) {
+  name = 'start';
 }
 
-switch (command.toLowerCase()) {
+switch (name.toLowerCase()) {
   case 'start':
     process.env.NODE_ENV = 'development';
 
-    run(start);
+    run(command.start);
     break;
-  case 'build':
   default:
-    throw new Error();
+    if (name in command) {
+      run(command[name]);
+    } else {
+      throw new Error();
+    }
 }
