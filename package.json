@@ -1,11 +1,11 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-alpha.6",
   "description": "",
   "main": "./dist/bin/paperwork",
   "scripts": {
     "lint": "eslint . --ext js,jsx",
-    "postinstall": "paperwork init",
+    "postinstall": "./dist/bin/paperwork init",
     "prepublish": "npm run release && npm run lint",
     "release": "gulp",
     "start": "gulp watch",
@@ -27,6 +27,7 @@
     "eslint-plugin-react": "^7.4.0",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-babel": "^7.0.0",
+    "gulp-copy": "^1.0.1",
     "gulp-notify": "^3.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
