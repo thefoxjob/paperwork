@@ -11,7 +11,7 @@ import config from './config';
 const configuration = {
   bail: ! config.debug,
   cache: ! config.debug,
-  devtool: config.debug ? 'cheap-module-inline-source-map' : 'source-map',
+  devtool: config.debug ? 'cheap-eval-source-map' : 'source-map',
   module: {
     rules: [
       {
@@ -29,7 +29,7 @@ const configuration = {
               options: {
                 discardComments: { removeAll: true },
                 importLoaders: 1,
-                localIdentName: config.debug ? '[local]-[hash:base64:5]' : '[hash:base64:5]',
+                localIdentName: '[local]',
                 minimize: ! config.debug,
                 modules: true,
                 sourceMap: config.debug,
@@ -68,6 +68,7 @@ const configuration = {
     ],
   },
   plugins: [
+    new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
     new HappyPack({
       loaders: ['babel-loader'],
       verbose: false,
@@ -76,7 +77,7 @@ const configuration = {
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
-    modules: ['node_modules', './'],
+    modules: ['node_modules'],
   },
   stats: {
     cached: false,
@@ -96,13 +97,14 @@ const client = {
   ...configuration,
   entry: {
     client: [
-      'babel-polyfill', 'whatwg-fetch', path.resolve(__dirname, './core/client/index.js'),
+      'babel-polyfill', 'whatwg-fetch', path.resolve(__dirname, './core/client/index.jsx'),
       ...config.debug ? [
         'react-error-overlay',
         'react-hot-loader/patch',
         'webpack-hot-middleware/client?nane=client&reload=true',
       ] : [],
     ],
+    routes: path.resolve(process.cwd(), './routes.js'),
   },
   name: 'client',
   node: {
@@ -116,7 +118,6 @@ const client = {
   },
   plugins: [
     ...configuration.plugins,
-    new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': config.debug ? '"development"' : '"production"',
       'process.env.BROWSER': true,
@@ -153,6 +154,10 @@ const client = {
         }),
       ],
   ],
+  resolve: {
+    ...configuration.resolve,
+    modules: [...configuration.resolve.modules, process.cwd()],
+  },
   target: 'web',
 
 };
@@ -195,6 +200,7 @@ const server = {
   ],
   resolve: {
     ...configuration.resolve,
+    modules: [...configuration.resolve.modules, './'],
   },
   target: 'node',
 };

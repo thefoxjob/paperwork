@@ -14,7 +14,7 @@ export default (app) => {
     const assets = { scripts: [], stylesheets: [] };
     const context = {};
 
-    const html = ReactDOMServer.renderToString((
+    const body = ReactDOMServer.renderToString((
       <StaticRouter
         location={ request.url }
         context={ context }
@@ -41,6 +41,6 @@ export default (app) => {
       }
     }));
 
-    return response.status(200).render('index', { assets, config, html });
+    return response.status(200).render('index', { assets, body, config });
   });
 };
