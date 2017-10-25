@@ -16,7 +16,7 @@ const configuration = {
     rules: [
       {
         test: /\.(js|jsx)?$/,
-        use: 'happypack/loader',
+        use: 'babel-loader',
         exclude: /node_modules/,
       },
       {
@@ -70,7 +70,20 @@ const configuration = {
   plugins: [
     new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
     new HappyPack({
-      loaders: ['babel-loader'],
+      loaders: [
+        {
+          loader: 'babel-loader',
+          query: {
+            presets: ['env', 'react'],
+            plugins: [
+              'dynamic-import-webpack',
+              'transform-class-properties',
+              'transform-object-rest-spread',
+              'transform-runtime',
+            ],
+          },
+        },
+      ],
       verbose: false,
     }),
     new StatsWriterPlugin({ fields: ['chunks', 'publicPath'] }),

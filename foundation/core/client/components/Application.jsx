@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import 'middleware/client';
 import router from '../router';
 
 

@@ -2,59 +2,47 @@ import fs from 'fs-extra';
 import path from 'path';
 
 
+const templates = [
+  {
+    source: '../../.templates/templates',
+    destination: './templates',
+    overwrite: true,
+  },
+  {
+    source: '../../.templates/middleware',
+    destination: './middleware',
+  },
+  {
+    source: '../../.templates/pages',
+    destination: './pages',
+  },
+  {
+    source: '../../.templates/routes.js',
+    destination: 'routes.js',
+  },
+  {
+    source: '../../.templates/stylesheets',
+    destination: './stylesheets',
+  },
+];
+
 const execute = () => {
-  fs.copy(path.resolve(__dirname, '../../templates'), path.resolve(process.cwd(), './templates'), (error) => {
-    if (error) {
-      throw error;
+  templates.forEach((template) => {
+    if (template.overwrite) {
+      if (fs.existsSync(path.resolve(process.cwd(), template.destination))) {
+        return;
+      }
     }
 
-    // eslint-disable-next-line no-console
-    console.info(`${ path.resolve(__dirname, '../../templates') } > ${ path.resolve(process.cwd(), './templates') }`);
+    fs.copy(path.resolve(__dirname, template.source).replace('/dist', '/'), path.resolve(process.cwd(), template.destination), (error) => {
+      if (error) {
+        throw error;
+      }
+
+      // eslint-disable-next-line no-console
+      console.info(`${ path.resolve(__dirname, template.source).replace('/dist', '/') } > ${ path.resolve(process.cwd(), template.destination) }`);
+    });
   });
-
-  if ( ! fs.existsSync(path.resolve(process.cwd(), './middleware'))) {
-    fs.copy(path.resolve(__dirname, '../../middleware'), path.resolve(process.cwd(), './middleware'), (error) => {
-      if (error) {
-        throw error;
-      }
-
-      // eslint-disable-next-line no-console
-      console.info(`${ path.resolve(__dirname, '../../middleware') } > ${ path.resolve(process.cwd(), './middleware') }`);
-    });
-  }
-
-  if ( ! fs.existsSync(path.resolve(process.cwd(), './pages'))) {
-    fs.copy(path.resolve(__dirname, '../../pages'), path.resolve(process.cwd(), './pages'), (error) => {
-      if (error) {
-        throw error;
-      }
-
-      // eslint-disable-next-line no-console
-      console.info(`${ path.resolve(__dirname, '../../pages') } > ${ path.resolve(process.cwd(), './pages') }`);
-    });
-  }
-
-  if ( ! fs.existsSync(path.resolve(process.cwd(), './stylesheets'))) {
-    fs.copy(path.resolve(__dirname, '../../stylesheets'), path.resolve(process.cwd(), './stylesheets'), (error) => {
-      if (error) {
-        throw error;
-      }
-
-      // eslint-disable-next-line no-console
-      console.info(`${ path.resolve(__dirname, '../../stylesheets') } > ${ path.resolve(process.cwd(), './stylesheets') }`);
-    });
-  }
-
-  if ( ! fs.existsSync(path.resolve(process.cwd(), './routes.js'))) {
-    fs.copy(path.resolve(__dirname, '../../routes.js'), path.resolve(process.cwd(), './routes.js'), (error) => {
-      if (error) {
-        throw error;
-      }
-
-      // eslint-disable-next-line no-console
-      console.info(`${ path.resolve(__dirname, '../../routes.js') } > ${ path.resolve(process.cwd(), './routes.js') }`);
-    });
-  }
 };
 
 export default execute;
