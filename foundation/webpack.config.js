@@ -110,7 +110,7 @@ const client = {
   ...configuration,
   entry: {
     client: [
-      'babel-polyfill', 'whatwg-fetch', path.resolve(__dirname, './core/client/index.jsx'),
+      'babel-polyfill', 'whatwg-fetch', path.resolve(__dirname, './core/client/index'),
       ...config.debug ? [
         'react-error-overlay',
         'react-hot-loader/patch',

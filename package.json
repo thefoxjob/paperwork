@@ -1,11 +1,10 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.15",
+  "version": "0.0.1-alpha.18",
   "description": "",
   "main": "./dist/bin/paperwork",
   "scripts": {
     "lint": "eslint . --ext js,jsx",
-    "postinstall": "./dist/bin/paperwork init",
     "prepack": "npm run release && npm run lint",
     "release": "gulp release",
     "start": "gulp watch",
