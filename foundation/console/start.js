@@ -83,50 +83,6 @@ const createCompilationPromise = (name, compiler) => new Promise((resolve, rejec
   });
 });
 
-const checkForUpdate = (app, update) => {
-  const prefix = '[\x1b[35mHMR\x1b[0m]';
-
-  if ( ! app.hot) {
-    // TODO: error 'hot module replacement is disabled.'
-  }
-
-  if (app.hot.status() !== 'idle') {
-    return Promise.resolve();
-  }
-
-  return app.hot.check(true)
-    .then((modules) => {
-      if ( ! modules) {
-        if (update) {
-          console.info(`${ prefix } updated applied.`);
-        }
-
-        return;
-      }
-
-      if (modules.length === 0) {
-        console.info(`${ prefix } nothing hot update.`);
-      } else {
-        console.info(`${ prefix } updated modules:`);
-        modules.forEach(id => console.info(`${ prefix } - ${ id }`));
-
-        checkForUpdate(app, true);
-      }
-    })
-    .catch((error) => {
-      if (['abort', 'fail'].includes(app.hot.status())) {
-        console.warn(`${ prefix } cannot apply update.`);
-        delete require.cache[require.resolve('../core/server')];
-
-        // eslint-disable-next-line global-require, no-param-reassign
-        app = require('../core/server');
-        console.warn(`${ prefix } app has been reloaded.`);
-      } else {
-        console.warn(`${ prefix } update failed: ${ error.stack || error.message }`);
-      }
-    });
-};
-
 let server = null;
 
 const execute = async () => {
@@ -157,6 +113,52 @@ const execute = async () => {
 
   server.use(devMiddleware);
   server.use(webpackHotMiddleware(compilers.client, { log: false }));
+
+  const checkForUpdate = (update) => {
+    const prefix = '[\x1b[35mHMR\x1b[0m]';
+
+    if ( ! app.instance.hot) {
+      // TODO: error 'hot module replacement is disabled.'
+      console.error(`${ chalk.bgRed(' Error ') } Hot module replacement is disable `);
+      return Promise.reject();
+    }
+
+    if (app.instance.hot.status() !== 'idle') {
+      return Promise.resolve();
+    }
+
+    return app.instance.hot.check(true)
+      .then((modules) => {
+        if ( ! modules) {
+          if (update) {
+            console.info(`${ prefix } updated applied.`);
+          }
+
+          return;
+        }
+
+        if (modules.length === 0) {
+          console.info(`${ prefix } nothing hot update.`);
+        } else {
+          console.info(`${ prefix } updated modules:`);
+          modules.forEach(id => console.info(`${ prefix } - ${ id }`));
+
+          checkForUpdate(app, true);
+        }
+      })
+      .catch((error) => {
+        if (['abort', 'fail'].includes(app.instance.hot.status())) {
+          console.warn(`${ prefix } cannot apply update.`);
+          delete require.cache[require.resolve(path.resolve(process.cwd(), './build/server/server'))];
+
+          // eslint-disable-next-line global-require, no-param-reassign, import/no-dynamic-require
+          app.instance = require(path.resolve(process.cwd(), './build/server/server')).default;
+          console.warn(`${ prefix } app has been reloaded.`);
+        } else {
+          console.warn(`${ prefix } update failed: ${ error.stack || error.message }`);
+        }
+      });
+  };
 
   compilers.server.plugin('compile', () => {
     if ( ! app.resolved) {

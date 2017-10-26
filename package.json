@@ -1,24 +1,31 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-alpha.18",
   "description": "",
   "main": "./dist/bin/paperwork",
   "scripts": {
     "lint": "eslint . --ext js,jsx",
+<<<<<<< HEAD
     "prepublish": "npm run release && npm run lint",
     "release": "gulp",
+=======
+    "prepack": "npm run release && npm run lint",
+    "release": "gulp release",
+>>>>>>> b3f42aab6b14f65365aee1772dd4623a10d69ade
     "start": "gulp watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Edward Khor",
   "license": "MIT",
   "files": [
-    "dist"
+    "dist",
+    ".templates"
   ],
   "bin": {
     "paperwork": "./dist/bin/paperwork"
   },
   "devDependencies": {
+    "babel-eslint": "^8.0.1",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.0.0",
     "eslint-plugin-import": "^2.7.0",
@@ -26,13 +33,19 @@
     "eslint-plugin-react": "^7.4.0",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-babel": "^7.0.0",
+    "gulp-copy": "^1.0.1",
     "gulp-notify": "^3.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-router": "^4.2.0"
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@slack/client": "3.14.1",
+=======
+    "autoprefixer": "^7.1.5",
+>>>>>>> b3f42aab6b14f65365aee1772dd4623a10d69ade
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -43,13 +56,17 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "chalk": "^2.1.0",
     "clui": "^0.3.6",
     "connect-redis": "^3.3.2",
     "cookie-parser": "^1.4.3",
+<<<<<<< HEAD
     "copyfiles": "^1.2.0",
     "country-data": "0.0.31",
+=======
+>>>>>>> b3f42aab6b14f65365aee1772dd4623a10d69ade
     "css-loader": "^0.28.7",
     "currency-symbol-map": "4.0.3",
     "deepmerge": "^1.5.2",
@@ -59,7 +76,11 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.5",
     "friendly-errors-webpack-plugin": "^1.6.1",
+<<<<<<< HEAD
     "geoip-lite-country": "1.1.5",
+=======
+    "fs-extra": "^4.0.2",
+>>>>>>> b3f42aab6b14f65365aee1772dd4623a10d69ade
     "happypack": "^4.0.0",
     "hiredis": "^0.5.0",
     "memorystore": "^1.5.1",
@@ -69,7 +90,9 @@
     "nodemailer": "4.2.0",
     "null-loader": "^0.1.1",
     "postcss-loader": "^2.0.6",
+    "precss": "^2.0.0",
     "pretty-error": "^2.1.1",
+    "prop-types": "^15.6.0",
     "raw-loader": "^1.0.0-beta.0",
     "react-error-overlay": "^2.0.2",
     "react-hot-loader": "next",
@@ -88,6 +111,7 @@
   "peerDependencies": {
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-router": "^4.2.0"
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2"
   }
 }
