@@ -1,5 +1,5 @@
 class AuthProvider {
-  constructor(request, options={}) {
+  constructor(request, options = {}) {
     this.request = request;
     this.options = options;
   }
