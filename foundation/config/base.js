@@ -15,12 +15,7 @@ export default {
     },
     auth: {
       adapter: null,
-      options: {
-        service: {
-          login: null,
-          logout: null,
-        },
-      },
+      options: {},
     },
     cache: {
       session: {
