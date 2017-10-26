@@ -13,6 +13,15 @@ export default {
       port: 3000,
       public: path.resolve(process.cwd(), 'public'),
     },
+    auth: {
+      adapter: null,
+      options: {
+        service: {
+          login: null,
+          logout: null,
+        },
+      },
+    },
     cache: {
       session: {
         driver: 'redis',
@@ -26,6 +35,10 @@ export default {
       },
     },
     server: {
+    },
+    service: {
+      endpoints: {},
+      services: {},
     },
     session: {
       secret: 'important_change_this',

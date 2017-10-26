@@ -7,6 +7,8 @@ import config from '../../config';
 import log from '../../log';
 import routes from './routes';
 import session from '../../session';
+import { AuthServiceProvider } from '../../auth';
+import { Service } from '../../service';
 
 
 const promises = { route: null };
@@ -27,6 +29,12 @@ app.set('views', config.secure.template.source);
 app.use(cookieParser());
 app.use(session.middleware(config.secure.session));
 app.use(express.static(config.secure.application.public));
+app.use((request, response, next) => {
+  request.service = new Service(request, config.secure.service.endpoints, config.secure.service.services);
+  request.auth = new AuthServiceProvider(request, config.secure.auth);
+
+  next();
+});
 
 try {
   // eslint-disable-next-line global-require, import/no-dynamic-require
