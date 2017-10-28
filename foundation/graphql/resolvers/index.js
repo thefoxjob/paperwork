@@ -10,7 +10,7 @@ export default async () => {
 
   try {
     const results = await import('application/graphql/resolvers');
-    results.forEach((resolver) => _.merge(resolvers, resolver));
+    results.forEach(resolver => _.merge(resolvers, resolver));
   } catch (error) {
     // skip
   }
