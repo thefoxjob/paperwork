@@ -4,25 +4,25 @@ import path from 'path';
 
 const templates = [
   {
-    source: '../../.templates/templates',
-    destination: './templates',
+    source: '../../.templates/application/templates',
+    destination: './application/templates/',
     overwrite: true,
   },
   {
-    source: '../../.templates/middleware',
-    destination: './middleware',
+    source: '../../.templates/application/middleware',
+    destination: './application/middleware',
   },
   {
-    source: '../../.templates/pages',
-    destination: './pages',
+    source: '../../.templates/application/pages',
+    destination: './application/pages',
   },
   {
-    source: '../../.templates/routes.js',
-    destination: 'routes.js',
+    source: '../../.templates/application/routes.js',
+    destination: './application/routes.js',
   },
   {
-    source: '../../.templates/stylesheets',
-    destination: './stylesheets',
+    source: '../../.templates/application/stylesheets',
+    destination: './application/stylesheets',
   },
 ];
 

@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Application from './components/Application';
 
 
-import('middleware/client')
+import('application/middleware/client')
   .then(() => {
     ReactDOM.render(<BrowserRouter><Application /></BrowserRouter>, document.getElementById('root'));
   });

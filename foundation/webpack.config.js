@@ -117,7 +117,6 @@ const client = {
         'webpack-hot-middleware/client?nane=client&reload=true',
       ] : [],
     ],
-    routes: path.resolve(process.cwd(), './routes.js'),
   },
   name: 'client',
   node: {
