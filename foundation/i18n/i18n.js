@@ -1,11 +1,11 @@
 import i18n from 'i18next';
-import middleware from 'i18next-express-middleware';
+import { LanguageDetector, handle as middleware } from 'i18next-express-middleware';
 
 
 export default {
   init: (app) => {
     const instance = i18n
-      .use(middleware.LanguageDetector)
+      .use(LanguageDetector)
       .createInstance({
         debug: process.env.NODE_ENV !== 'production',
         lowerCaseLng: true,
@@ -17,7 +17,7 @@ export default {
         },
       });
 
-    app.use(middleware.handle(instance));
+    app.use(middleware(instance));
 
     return instance;
   },

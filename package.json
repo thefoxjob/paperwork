@@ -1,6 +1,6 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.20",
+  "version": "0.0.1-alpha.30",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
@@ -67,6 +67,7 @@
     "friendly-errors-webpack-plugin": "^1.6.1",
     "fs-extra": "^4.0.2",
     "geoip-lite-country": "1.1.5",
+    "graphql": "^0.11.7",
     "graphql-relay": "^0.5.3",
     "graphql-server-express": "^1.2.0",
     "graphql-tools": "^2.6.1",

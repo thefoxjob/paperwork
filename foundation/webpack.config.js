@@ -212,7 +212,7 @@ const server = {
   ],
   resolve: {
     ...configuration.resolve,
-    modules: [...configuration.resolve.modules, './'],
+    modules: [...configuration.resolve.modules, process.cwd()],
   },
   target: 'node',
 };

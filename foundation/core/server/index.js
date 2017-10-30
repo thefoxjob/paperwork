@@ -44,7 +44,7 @@ app.use((request, response, next) => {
 
 try {
   // eslint-disable-next-line global-require, import/no-dynamic-require
-  const middleware = require(path.resolve(process.cwd(), './application/middleware/server.js'));
+  const middleware = require(`${ path.relative(__dirname, process.cwd()) }/application/middleware/server`);
   middleware(app);
 } catch (error) {
   // skip

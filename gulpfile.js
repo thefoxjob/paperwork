@@ -16,8 +16,8 @@ gulp.task('foundation', () => gulp.src('foundation/**/*.{js,jsx}')
 
 gulp.task('index', () => gulp.src('index.js')
   .pipe(babel())
-  .pipe(gulp.dest('dist/index.js'))
-  .pipe(notify({ message: 'indexjs compiled successfully', onLast: true })));
+  .pipe(gulp.dest('dist/'))
+  .pipe(notify({ message: 'index.js compiled successfully', onLast: true })));
 
 gulp.task('clean', () => fs.remove('./dist'));
 
