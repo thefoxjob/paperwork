@@ -1,49 +1,34 @@
-import Email from './drivers/email';
-import Slack from './drivers/slack';
-
 class Notification {
-  constructor(sender, recipient, title, msg, options = {}) {
-    this.sender = sender;
-    this.recipient = recipient;
-    this.title = title;
-    this.msg = msg;
-    this.options = options;
+  constructor(adapter) {
+    this.adapter = adapter;
   }
 
-  static use(service) {
-    let driver = null;
+  sender(sender) {
+    this.adapter.sender(sender);
 
-    try {
-      const driver = require(`.drivers/${ service }`);
-    } catch (e) {
-      logMyErrors(e);
-    }
-
-    return new NotificationDriver(service);
-  }
-}
-
-class NotificationDriver extends Notification {
-  constructor(driver) {
-    super();
-
-    this.driver = driver;
+    return this;
   }
 
-  send() {
-    const notificationObject = new Notification(this.recipient, this.msg, this.options={});
-    switch(this.driver) {
-    case 'slack': 
-      return new Slack(notificationObject);
-      Slack.send();
-      break;
-    case'email':
-      return new Email(notificationObject);
-      Email.send();
-      break;
-    default:
-      throw 'Notification sending failed!';
-    }
+  addRecipient(recipient) {
+    this.adapter.recipients(recipient);
+
+    return this;
+  }
+
+  subject(subject) {
+    this.adapter.subject(subject);
+
+    return this;
+  }
+
+  message(message) {
+    this.adapter.message(message);
+
+    return this;
+  }
+
+  send(message = null, subject = null, recipients = null) {
+    return this.adapter.send(message, subject, recipients);
   }
 }
 

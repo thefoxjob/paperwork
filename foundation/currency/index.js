@@ -1,5 +1,6 @@
-import currency from './currency';
+import Currency from './Currency';
+
 
 export default {
-	currency,
+  Currency,
 };
