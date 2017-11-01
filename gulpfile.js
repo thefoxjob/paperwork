@@ -14,17 +14,11 @@ gulp.task('foundation', () => gulp.src('foundation/**/*.{js,jsx}')
   .pipe(gulp.dest('dist/foundation'))
   .pipe(notify({ message: 'foundation/**/* compiled successfully', onLast: true })));
 
-gulp.task('index', () => gulp.src('index.js')
-  .pipe(babel())
-  .pipe(gulp.dest('dist/'))
-  .pipe(notify({ message: 'index.js compiled successfully', onLast: true })));
-
 gulp.task('clean', () => fs.remove('./dist'));
 
 gulp.task('watch-binary', () => gulp.watch('bin/**/*', gulp.parallel('binary')));
 gulp.task('watch-foundation', () => gulp.watch('foundation/**/*', gulp.parallel('foundation')));
-gulp.task('watch-index', () => gulp.watch('index.js', gulp.parallel('index')));
 
-gulp.task('default', gulp.parallel('binary', 'foundation', 'index'));
+gulp.task('default', gulp.parallel('binary', 'foundation'));
 gulp.task('release', gulp.series('clean', 'default'));
-gulp.task('watch', gulp.parallel('default', 'watch-binary', 'watch-foundation', 'watch-index'));
+gulp.task('watch', gulp.parallel('default', 'watch-binary', 'watch-foundation'));

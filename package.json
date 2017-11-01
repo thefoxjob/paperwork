@@ -1,8 +1,8 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.34",
+  "version": "0.0.1-alpha.35",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "index.js",
   "scripts": {
     "lint": "eslint . --ext js,jsx",
     "prepack": "npm run release && npm run lint",
