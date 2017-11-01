@@ -29,6 +29,25 @@ export default {
         uri: 'mongodb://localhost:27017',
       },
     },
+    notification: {
+      adapters: {
+        email: {
+          // eslint-disable-next-line global-require
+          adapter: require('../notification/adapters/EmailNotificationAdapter'),
+          options: {
+            sender: null,
+          },
+        },
+        slack: {
+          // eslint-disable-next-line global-require
+          adapter: require('../notification/adapters/SlackNotificationAdapter'),
+          options: {
+            token: 'xoxp-2509138989-249078960512-259985951266-f426e3fd5cb32658185c15733df7b2f5',
+          },
+        },
+      },
+      default: 'slack',
+    },
     server: {
     },
     service: {
