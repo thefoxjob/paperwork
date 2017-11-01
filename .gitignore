@@ -1,6 +1,6 @@
-dist/
-build/
-application/
+dist/*
+build/*
+application/*
 
 # Logs
 logs
