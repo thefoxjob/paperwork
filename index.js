@@ -1,6 +1,6 @@
-import auth from './foundation/auth';
-import currency from './foundation/currency';
+import config from './foundation/config';
 import log from './foundation/log';
-import service from './foundation/service';
+import { AuthAdapter, AuthServiceProvider, Auth } from './foundation/auth';
+import { Service } from './foundation/service';
 
-export { auth, currency, log, service };
+export { AuthAdapter, AuthServiceProvider, Auth, Service, config, log };

@@ -90,7 +90,7 @@ const configuration = {
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
-    modules: ['node_modules'],
+    modules: [process.cwd(), 'node_modules'],
   },
   stats: {
     cached: false,
@@ -117,7 +117,6 @@ const client = {
         'webpack-hot-middleware/client?nane=client&reload=true',
       ] : [],
     ],
-    routes: path.resolve(process.cwd(), './routes.js'),
   },
   name: 'client',
   node: {
@@ -169,7 +168,6 @@ const client = {
   ],
   resolve: {
     ...configuration.resolve,
-    modules: [...configuration.resolve.modules, process.cwd()],
   },
   target: 'web',
 
@@ -213,7 +211,6 @@ const server = {
   ],
   resolve: {
     ...configuration.resolve,
-    modules: [...configuration.resolve.modules, './'],
   },
   target: 'node',
 };

@@ -1,44 +1,40 @@
 #!/usr/bin/env node
 
-import PrettyError from 'pretty-error';
-import chalk from 'chalk';
-import command from '../foundation/console';
+require('babel-register');
+const PrettyError = require('pretty-error');
+const chalk = require('chalk');
+const command = require('../foundation/console').default;
 
 process.stdout.write(chalk.green('-'.repeat(120)));
 process.stdout.write('\x1B[2J\n\x1B[0f\u001b[0;0H');
 
-const run = async (module, options) => {
+
+const run = (module, options) => {
   const pretty = new PrettyError();
   const task = typeof module.default === 'undefined' ? module : module.default;
 
   pretty.start();
+  const promise = task(options);
 
-  try {
-    await task(options);
-  } catch (exception) {
-    if (exception) {
-      // eslint-disable-next-line no-console
-      console.error(exception);
-    }
+  if (promise && promise.catch) {
+    // eslint-disable-next-line no-console
+    promise.catch(exception => console.error(exception));
   }
 };
 
 // eslint-disable-next-line no-underscore-dangle
 delete require.cache[__filename];
-
 let name = process.argv[2];
 
 if ( ! name || name.startsWith('--')) {
   name = 'start';
 }
 
-
 switch (name.toLowerCase()) {
   case 'start':
     process.env.NODE_ENV = 'development';
-    require('babel-register');
-
     run(command.start);
+
     break;
   default:
     if (name in command) {

@@ -1,6 +1,6 @@
+import _ from 'lodash';
 import HTTPClient from 'request';
 import chalk from 'chalk';
-import helper from 'lodash';
 import pathToRegExp from 'path-to-regexp';
 import restful, { requestBackend } from 'restful.js';
 
@@ -82,7 +82,7 @@ class Service {
     const path = compiler(params).replace(/%2F/g, '/');
 
     if (service.payloads && service.payloads.length > 0) {
-      const difference = helper.difference(service.payloads, Object.keys(payloads));
+      const difference = _.difference(service.payloads, Object.keys(payloads));
 
       if (difference.length > 0) {
         throw new ReferenceError(`[Service Module] Payload "${ difference.join('", "') }" is required.`);
@@ -90,7 +90,7 @@ class Service {
     }
 
     if (service.queries) {
-      const difference = helper.difference(service.queries, Object.keys(queries));
+      const difference = _.difference(service.queries, Object.keys(queries));
 
       if (difference.length > 0) {
         throw new ReferenceError(`[Service Module] Query "${ difference.join('", "') }" is required.`);

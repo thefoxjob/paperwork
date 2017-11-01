@@ -61,7 +61,7 @@ export default {
     },
     template: {
       engine: 'ejs',
-      source: path.resolve(process.cwd(), 'templates'),
+      source: path.resolve(process.cwd(), './application/templates'),
     },
   },
   services: {

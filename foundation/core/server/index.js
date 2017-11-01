@@ -9,6 +9,7 @@ import routes from './routes';
 import session from '../../session';
 import { AuthServiceProvider } from '../../auth';
 import { Service } from '../../service';
+import { Translator, i18n } from '../../i18n';
 
 
 const promises = { route: null };
@@ -29,16 +30,21 @@ app.set('views', config.secure.template.source);
 app.use(cookieParser());
 app.use(session.middleware(config.secure.session));
 app.use(express.static(config.secure.application.public));
+
+const language = i18n.init(app);
+
 app.use((request, response, next) => {
-  request.service = new Service(request, config.secure.service.endpoints, config.secure.service.services);
-  request.auth = new AuthServiceProvider(request, config.secure.auth);
+  request.modules = {};
+  request.modules.service = new Service(request, config.secure.service.endpoints, config.secure.service.services);
+  request.modules.auth = new AuthServiceProvider(request, config.secure.auth);
+  request.modules.translator = new Translator(request, language);
 
   next();
 });
 
 try {
   // eslint-disable-next-line global-require, import/no-dynamic-require
-  const middleware = require(path.resolve(process.cwd(), './middleware/server.js'));
+  const middleware = require(`${ path.relative(__dirname, process.cwd()) }/application/middleware/server`);
   middleware(app);
 } catch (error) {
   // skip
