@@ -88,10 +88,6 @@ const configuration = {
     }),
     new StatsWriterPlugin({ fields: ['chunks', 'publicPath'] }),
   ],
-  resolve: {
-    extensions: ['.js', '.jsx', '.json'],
-    modules: [process.cwd(), 'node_modules'],
-  },
   stats: {
     cached: false,
     cachedAssets: false,
@@ -114,7 +110,7 @@ const client = {
       ...config.debug ? [
         'react-error-overlay',
         'react-hot-loader/patch',
-        'webpack-hot-middleware/client?nane=client&reload=true',
+        'webpack-hot-middleware/client?name=client&reload=true',
       ] : [],
     ],
   },
@@ -167,7 +163,8 @@ const client = {
       ],
   ],
   resolve: {
-    ...configuration.resolve,
+    extensions: ['.js', '.jsx', '.json'],
+    modules: ['node_modules', process.cwd()],
   },
   target: 'web',
 
@@ -210,7 +207,8 @@ const server = {
     ] : [],
   ],
   resolve: {
-    ...configuration.resolve,
+    extensions: ['.js', '.jsx', '.json'],
+    modules: ['node_modules', process.cwd()],
   },
   target: 'node',
 };

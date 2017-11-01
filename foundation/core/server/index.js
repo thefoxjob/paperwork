@@ -43,8 +43,18 @@ app.use((request, response, next) => {
 });
 
 try {
-  // eslint-disable-next-line global-require, import/no-dynamic-require
-  const middleware = require(`${ path.relative(__dirname, process.cwd()) }/application/middleware/server`);
+  const relative = path.relative(__dirname, process.cwd());
+  let middleware = null;
+
+  if (relative === '../../..') {
+    // eslint-disable-next-line global-require, import/no-unresolved
+    middleware = require('../../../application/middleware/server');
+  } else if (relative === '../../../../../..') {
+    // eslint-disable-next-line global-require, import/no-unresolved
+    middleware = require('../../../../../../application/middleware/server');
+  }
+
+  middleware = middleware.default ? middleware.default : middleware;
   middleware(app);
 } catch (error) {
   // skip
