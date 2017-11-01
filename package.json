@@ -1,6 +1,6 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.30",
+  "version": "0.0.1-alpha.33",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {

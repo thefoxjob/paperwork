@@ -90,7 +90,7 @@ const configuration = {
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
-    modules: ['node_modules'],
+    modules: [process.cwd(), 'node_modules'],
   },
   stats: {
     cached: false,
@@ -168,7 +168,6 @@ const client = {
   ],
   resolve: {
     ...configuration.resolve,
-    modules: [...configuration.resolve.modules, process.cwd()],
   },
   target: 'web',
 
@@ -212,7 +211,6 @@ const server = {
   ],
   resolve: {
     ...configuration.resolve,
-    modules: [...configuration.resolve.modules, process.cwd()],
   },
   target: 'node',
 };

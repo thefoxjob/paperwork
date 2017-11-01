@@ -13,7 +13,6 @@ import webpackConfig from '../webpack.config';
 
 
 const requestShortener = new RequestShortener(process.cwd());
-
 const options = {
   // ignored: /node_modules/,
 };

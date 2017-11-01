@@ -4,21 +4,21 @@ import * as middleware from 'i18next-express-middleware';
 
 export default {
   init: (app) => {
-    const instance = i18n
-      .use(middleware.LanguageDetector)
-      .createInstance({
-        debug: process.env.NODE_ENV !== 'production',
-        lowerCaseLng: true,
-        detection: {
-          lookupQueryString: 'language',
-          lookupCookie: 'language',
-          lookupSession: 'language',
-          lookupPath: 'language',
-        },
-      });
+    i18n.use(middleware.LanguageDetector);
+    i18n.init({
+      detection: {
+        lookupQueryString: 'language',
+        lookupCookie: 'language',
+        lookupSession: 'language',
+        lookupPath: 'language',
+      },
+      fallbackLng: 'en',
+      lng: 'en',
+      lowerCaseLng: true,
+    });
 
-    app.use(middleware.handle(instance));
+    app.use(middleware.handle(i18n));
 
-    return instance;
+    return i18n;
   },
 };
