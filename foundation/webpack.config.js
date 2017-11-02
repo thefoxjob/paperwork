@@ -73,15 +73,6 @@ const configuration = {
       loaders: [
         {
           loader: 'babel-loader',
-          query: {
-            presets: ['env', 'react'],
-            plugins: [
-              'dynamic-import-webpack',
-              'transform-class-properties',
-              'transform-object-rest-spread',
-              'transform-runtime',
-            ],
-          },
         },
       ],
       verbose: false,

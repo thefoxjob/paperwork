@@ -24,6 +24,14 @@ const templates = [
     source: '../../.templates/application/stylesheets',
     destination: './application/stylesheets',
   },
+  {
+    source: '../../.templates/.babelrc',
+    destination: './.babelrc',
+  },
+  {
+    source: '../../.templates/.eslintrc',
+    destination: './.eslintrc',
+  },
 ];
 
 const execute = () => {

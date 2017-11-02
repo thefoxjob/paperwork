@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-require('babel-register');
 const PrettyError = require('pretty-error');
 const chalk = require('chalk');
 const command = require('../foundation/console').default;
