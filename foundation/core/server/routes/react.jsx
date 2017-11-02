@@ -16,7 +16,7 @@ export default (app) => {
 
     const body = ReactDOMServer.renderToString((
       <StaticRouter
-        location={ request.url }
+        location={ request.baseUrl }
         context={ context }
       >
         <Application />

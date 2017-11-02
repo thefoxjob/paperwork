@@ -22,6 +22,7 @@ class Application extends React.PureComponent {
   render() {
     return this.state.routes.map(route => (
       <Route
+        exact={ typeof (route.exact) === 'boolean' ? route.exact : true }
         path={ route.path }
         render={ props => <route.component { ...props } routes={ route.routes } /> }
       />
