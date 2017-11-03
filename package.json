@@ -1,6 +1,6 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.37",
+  "version": "0.0.1-alpha.38",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -30,6 +30,7 @@
     "gulp-babel": "^7.0.0",
     "gulp-copy": "^1.0.1",
     "gulp-notify": "^3.0.0",
+    "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-router": "^4.2.0",
@@ -53,6 +54,7 @@
     "babel-runtime": "^6.26.0",
     "body-parser": "^1.18.2",
     "chalk": "^2.1.0",
+    "classnames": "^2.2.5",
     "clui": "^0.3.6",
     "connect-redis": "^3.3.2",
     "cookie-parser": "^1.4.3",
@@ -86,7 +88,6 @@
     "postcss-loader": "^2.0.6",
     "precss": "^2.0.0",
     "pretty-error": "^2.1.1",
-    "prop-types": "^15.6.0",
     "raw-loader": "^1.0.0-beta.0",
     "react-error-overlay": "^2.0.2",
     "react-hot-loader": "next",
@@ -106,6 +107,7 @@
     "winston": "next"
   },
   "peerDependencies": {
+    "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-router": "^4.2.0",
