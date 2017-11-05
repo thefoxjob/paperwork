@@ -41,6 +41,9 @@ export default (app) => {
       }
     }));
 
-    return response.status(200).render('index', { assets, body, config });
+    const configuration = Object.assign({}, config);
+    delete configuration.secure;
+
+    return response.status(200).render('index', { assets, body, config: configuration });
   });
 };

@@ -16,8 +16,11 @@ const configuration = {
     rules: [
       {
         test: /\.(js|jsx)?$/,
-        use: 'babel-loader',
-        exclude: /node_modules/,
+        use: 'happypack/loader',
+        exclude: {
+          test: /node_modules/,
+          exclude: /node_modules\/@thefoxjob/,
+        },
       },
       {
         test: /\.(scss|css)$/,

@@ -1,6 +1,6 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.38",
+  "version": "0.0.1-alpha.43",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,10 @@
   "author": "Edward Khor",
   "license": "MIT",
   "files": [
+    "client.js",
     "dist",
+    "dom.js",
+    "index.js",
     ".templates"
   ],
   "bin": {
@@ -39,10 +42,13 @@
   },
   "dependencies": {
     "@slack/client": "3.14.1",
+    "@thefoxjob/js-ioc": "^1.0.0",
+    "@thefoxjob/js-service-provider": "1.0.4",
     "autoprefixer": "^7.1.5",
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-node-modules": "^0.0.1",
     "babel-plugin-dynamic-import-webpack": "^1.0.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",

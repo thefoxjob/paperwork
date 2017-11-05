@@ -1,19 +1,19 @@
+import ServiceProvider from '@thefoxjob/js-service-provider';
+
 import Notification from './Notification';
-import config from '../config';
 
 
-class NotificationServiceProvider {
-  constructor(name = null, _options = {}) {
-    const adapter = name || config.secure.notification.default;
-    const options = Object.assign(config.secure.notification, _options);
+class NotificationServiceProvider extends ServiceProvider {
+  register() {
+    this.ioc.bind('Notification', (ioc, params) => {
+      const config = ioc.make('config');
+      const options = config.secure.modules.notification;
+      const adapter = ioc.make('NotificationAdapter', { request: params.request, options });
 
-    if ( ! options.adapters[adapter]) {
-      throw new ReferenceError(`[Notification Module] ${ adapter } is not found.`);
-    }
+      return new Notification(adapter);
+    });
 
-    const Adapter = options.adapters[adapter].adapter.default ? options.adapters[adapter].adapter.default : options.adapters[adapter].adapter;
-
-    return new Notification(new Adapter(options.adapters[adapter].options));
+    this.ioc.alias('Notification', 'notification');
   }
 }
 

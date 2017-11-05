@@ -1,15 +1,18 @@
+import ServiceProvider from '@thefoxjob/js-service-provider';
 import Auth from './Auth';
 
-class AuthServiceProvider {
-  constructor(request, options) {
-    if ( ! options.adapter) {
-      return null;
-    }
 
-    const AuthAdapter = options.adapter.default ? options.adapter.default : options.adapter;
-    const adapter = new AuthAdapter(request, options.options);
+class AuthServiceProvider extends ServiceProvider {
+  register() {
+    this.ioc.bind('Auth', (ioc, params) => {
+      const config = ioc.make('config');
+      const options = config.secure.modules.auth;
+      const adapter = ioc.make('AuthAdapter', { request: params.request, options });
 
-    return new Auth(request, adapter);
+      return new Auth(params.request, adapter);
+    });
+
+    this.ioc.alias('Auth', 'auth');
   }
 }
 

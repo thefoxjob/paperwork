@@ -1,4 +1,4 @@
-class AuthProvider {
+class AuthAdapter {
   constructor(request, options = {}) {
     this.request = request;
     this.options = options;
@@ -20,4 +20,4 @@ class AuthProvider {
   }
 }
 
-export default AuthProvider;
+export default AuthAdapter;

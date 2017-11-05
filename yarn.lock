@@ -19,6 +19,34 @@
     winston "^2.1.1"
     ws "^1.0.1"
 
+"@thefoxjob/js-facade@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@thefoxjob/js-facade/-/js-facade-1.0.0.tgz#833f2e706538d1b25edf14f69f3d83ae01e5bc0b"
+
+"@thefoxjob/js-ioc@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@thefoxjob/js-ioc/-/js-ioc-1.0.0.tgz#a2115e2c1f5d4b0fc0feaa9ad91bb20115a4a32c"
+  dependencies:
+    "@thefoxjob/js-meta" "^1.0.0"
+
+"@thefoxjob/js-meta@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@thefoxjob/js-meta/-/js-meta-1.0.0.tgz#793025788fa14cc510097dcf48f3d4a1f1c0913e"
+  dependencies:
+    "@thefoxjob/js-mixin" "^1.0.0"
+
+"@thefoxjob/js-mixin@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@thefoxjob/js-mixin/-/js-mixin-1.0.0.tgz#b3c1120aab4301da3db2d242cb1b4fb8c599964e"
+
+"@thefoxjob/js-service-provider@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@thefoxjob/js-service-provider/-/js-service-provider-1.0.4.tgz#7e5bf05ea348b85d64f9f474b0ce439322adb2f4"
+  dependencies:
+    "@thefoxjob/js-facade" "^1.0.0"
+    "@thefoxjob/js-mixin" "^1.0.0"
+    babel-runtime "^6.26.0"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -657,6 +685,12 @@ babel-messages@^6.23.0:
   dependencies:
     babel-runtime "^6.22.0"
 
+babel-node-modules@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/babel-node-modules/-/babel-node-modules-0.0.1.tgz#ef02250a58d11bda2c923d90224c6c12fcf4152d"
+  dependencies:
+    babel-register "^6.24.0"
+
 babel-plugin-check-es2015-constants@^6.22.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-check-es2015-constants/-/babel-plugin-check-es2015-constants-6.22.0.tgz#35157b101426fd2ffd3da3f75c7d1e91835bbf8a"
@@ -1016,7 +1050,7 @@ babel-preset-react@^6.24.1:
     babel-plugin-transform-react-jsx-source "^6.22.0"
     babel-preset-flow "^6.23.0"
 
-babel-register@^6.26.0:
+babel-register@^6.24.0, babel-register@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-register/-/babel-register-6.26.0.tgz#6ed021173e2fcb486d7acb45c6009a856f647071"
   dependencies:

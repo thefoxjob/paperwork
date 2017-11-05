@@ -5,7 +5,7 @@ import pathToRegExp from 'path-to-regexp';
 import restful, { requestBackend } from 'restful.js';
 
 
-class Service {
+class Restful {
   constructor(request, endpoints = {}, services = {}) {
     this.endpoints = endpoints;
     this.request = request;
@@ -133,4 +133,4 @@ class Service {
   }
 }
 
-export default Service;
+export default Restful;
