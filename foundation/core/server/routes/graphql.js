@@ -6,10 +6,10 @@ import schemas from '../../../graphql/schemas';
 import resolvers from '../../../graphql/resolvers';
 
 
-export default (app) => {
+export default async (app) => {
   const executableSchema = makeExecutableSchema({
-    typeDefs: [schemas],
-    resolvers,
+    typeDefs: await schemas(),
+    resolvers: await resolvers(),
   });
 
   const graphqlServer = graphqlExpress((request) => {

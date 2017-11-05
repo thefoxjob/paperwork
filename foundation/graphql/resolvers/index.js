@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import fs from 'fs';
+import path from 'path';
 
 import page from './page';
 
@@ -8,12 +10,11 @@ export default async () => {
 
   _.merge(resolvers, page);
 
-  try {
-    const results = await import('application/graphql/resolvers');
-    results.forEach(resolver => _.merge(resolvers, resolver));
-  } catch (error) {
-    // skip
-  }
+  await fs.readdirSync(path.resolve(process.cwd(), 'application/graphql/resolvers')).forEach(async (file) => {
+    const resolver = await import(`application/graphql/resolvers/${ file }`);
+
+    _.merge(resolvers, resolver);
+  });
 
   return resolvers;
 };

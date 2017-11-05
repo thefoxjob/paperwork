@@ -11,6 +11,7 @@ import config from './config';
 const configuration = {
   bail: ! config.debug,
   cache: ! config.debug,
+  context: process.cwd(),
   devtool: config.debug ? 'cheap-eval-source-map' : 'source-map',
   module: {
     rules: [

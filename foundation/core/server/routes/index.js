@@ -1,6 +1,8 @@
+import configuration from './configuration';
+import graphql from './graphql';
 import react from './react';
 
-const routes = [react];
+const routes = [configuration, graphql, react];
 
 export default {
   routes,
