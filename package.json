@@ -13,6 +13,8 @@
   "author": "Edward Khor",
   "license": "MIT",
   "files": [
+    "client",
+    "client.js",
     "dist",
     "dom",
     "dom.js",
