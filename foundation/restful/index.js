@@ -1,6 +1,6 @@
-import Service from './Service';
+import Restful from './Restful';
 
 
 // eslint-disable-next-line import/prefer-default-export
-export { Service };
-export default { Service };
+export { Restful };
+export default { Restful };

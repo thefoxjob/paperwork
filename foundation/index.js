@@ -1,6 +1,5 @@
 import config from './config';
 import log from './log';
-import { AuthAdapter, AuthServiceProvider, Auth } from './auth';
-import { Service } from './service';
+import { AuthAdapter } from './auth';
 
-export { AuthAdapter, AuthServiceProvider, Auth, Service, config, log };
+export { AuthAdapter, config, log };
