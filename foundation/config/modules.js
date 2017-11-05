@@ -29,10 +29,10 @@ if (fs.existsSync(path.resolve(process.cwd(), './config/modules.js'))) {
     } catch (error) {
       // skip
     }
-  } else if (relative === '../../../../..') {
+  } else if (relative === '../../../../../..') {
     try {
       // eslint-disable-next-line import/no-unresolved
-      config = merge(config, require('../../../../../config/modules'));
+      config = merge(config, require('../../../../../../config/modules'));
     } catch (error) {
       // skip
     }

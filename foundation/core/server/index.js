@@ -36,9 +36,9 @@ try {
   if (relative === '../../..') {
     // eslint-disable-next-line global-require, import/no-unresolved
     middleware = require('../../../application/middleware/server');
-  } else if (relative === '../../../../../..') {
+  } else if (relative === '../../../../../../..') {
     // eslint-disable-next-line global-require, import/no-unresolved
-    middleware = require('../../../../../../application/middleware/server');
+    middleware = require('../../../../../../../application/middleware/server');
   }
 
   middleware = middleware.default ? middleware.default : middleware;
