@@ -44,7 +44,7 @@ const Image = (props) => {
   const properties = Object.assign({}, props);
   delete properties.src;
 
-  return <img { ...properties } alt={ props.alt } srcSet={ images.join(',') } />;
+  return <img { ...properties } alt={ props.alt } srcSet={ images.join(', ') } />;
 };
 
 Image.defaultProps = {
