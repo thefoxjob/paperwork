@@ -21,18 +21,18 @@ let config = Object.assign({}, {
 
 const relative = path.relative(__dirname, process.cwd());
 
-if (fs.existsSync(path.resolve(process.cwd(), './config/modules.js'))) {
+if (fs.existsSync(path.resolve(process.cwd(), './application/config/modules.js'))) {
   if (relative === '../..') {
     try {
       // eslint-disable-next-line import/no-unresolved
-      config = merge(config, require('../../config/modules'));
+      config = merge(config, require('../../application/config/modules'));
     } catch (error) {
       // skip
     }
   } else if (relative === '../../../../../..') {
     try {
       // eslint-disable-next-line import/no-unresolved
-      config = merge(config, require('../../../../../../config/modules'));
+      config = merge(config, require('../../../../../../application/config/modules'));
     } catch (error) {
       // skip
     }

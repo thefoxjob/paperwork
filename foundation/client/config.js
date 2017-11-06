@@ -10,14 +10,15 @@ export const load = async () => {
     config = require('../config').default;
   } else {
     const response = await window.fetch('/configuration');
-    config = JSON.parse(Buffer.from(await response.text(), 'base64').toString());
-    window.config = config;
+    config = await response.text();
+    window.config = btoa(config);
   }
 };
 
 export const get = (key, fallback = null) => {
   if (typeof (window) !== 'undefined') {
-    return _.get(window.config || {}, key, fallback);
+    const configuration = JSON.parse(atob(window.config));
+    return _.get(configuration || {}, key, fallback);
   }
 
   if ( ! config) {

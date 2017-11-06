@@ -9,36 +9,36 @@ import base from './base';
 let config = Object.assign({}, base);
 const relative = path.relative(__dirname, process.cwd());
 
-if (fs.existsSync(path.resolve(process.cwd(), './config/base.js'))) {
+if (fs.existsSync(path.resolve(process.cwd(), './application/config/base.js'))) {
   if (relative === '../..') {
     try {
       // eslint-disable-next-line global-require, import/no-unresolved
-      config = merge(config, require('../../config/base'));
+      config = merge(config, require('../../application/config/base'));
     } catch (error) {
       // skip
     }
   } else if (relative === '../../../../../..') {
     try {
       // eslint-disable-next-line global-require, import/no-unresolved
-      config = merge(config, require('../../../../../../config/base'));
+      config = merge(config, require('../../../../../../application/config/base'));
     } catch (error) {
       // skip
     }
   }
 }
 
-if (process.env.NODE_ENV && fs.existsSync(path.resolve(process.cwd(), `./config/${ process.env.NODE_ENV.toLowerCase() }.js`))) {
+if (process.env.NODE_ENV && fs.existsSync(path.resolve(process.cwd(), `./application/config/${ process.env.NODE_ENV.toLowerCase() }.js`))) {
   if (relative === '../..') {
     try {
       // eslint-disable-next-line global-require, import/no-dynamic-require
-      config = merge(config, require(`../../config/${ process.env.NODE_ENV.toLowerCase() }`));
+      config = merge(config, require(`../../application/config/${ process.env.NODE_ENV.toLowerCase() }`));
     } catch (error) {
       // skip
     }
   } else if (relative === '../../../../../..') {
     try {
       // eslint-disable-next-line global-require, import/no-dynamic-require
-      config = merge(config, require(`../../../../../../config/${ process.env.NODE_ENV.toLowerCase() }`));
+      config = merge(config, require(`../../../../../../application/config/${ process.env.NODE_ENV.toLowerCase() }`));
     } catch (error) {
       // skip
     }

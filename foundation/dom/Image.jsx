@@ -10,7 +10,7 @@ const Image = (props) => {
       return image;
     }
 
-    let src = null;
+    let { src } = image;
 
     if (props.base) {
       let { base } = props;
@@ -41,7 +41,10 @@ const Image = (props) => {
     images.push(process(props.src));
   }
 
-  return <img { ...props } alt={ props.alt } srcSet={ images.join(',') } />;
+  const properties = Object.assign({}, props);
+  delete properties.src;
+
+  return <img { ...properties } alt={ props.alt } srcSet={ images.join(',') } />;
 };
 
 Image.defaultProps = {
