@@ -5,16 +5,22 @@ import path from 'path';
 import page from './page';
 
 
-export default async () => {
-  const resolvers = {};
+const resolvers = {};
 
-  _.merge(resolvers, page);
+_.merge(resolvers, page);
 
-  await fs.readdirSync(path.resolve(process.cwd(), 'application/graphql/resolvers')).forEach(async (file) => {
-    const resolver = await import(`application/graphql/resolvers/${ file }`);
-
-    _.merge(resolvers, resolver);
+if (fs.existsSync(path.resolve(process.cwd(), 'application/graphql/resolvers'))) {
+  fs.readdirSync(path.resolve(process.cwd(), 'application/graphql/resolvers')).forEach((file) => {
+    if (/.js$/.test(file)) {
+      try {
+        // eslint-disable-next-line global-require, import/no-dynamic-require
+        const resolver = require(`application/graphql/resolvers/${ file }`);
+        _.merge(resolvers, resolver.default ? resolver.default : resolver);
+      } catch (error) {
+        // skip
+      }
+    }
   });
+}
 
-  return resolvers;
-};
+export default resolvers;

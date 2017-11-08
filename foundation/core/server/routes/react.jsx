@@ -1,3 +1,4 @@
+import Helmet from 'react-helmet';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import fs from 'fs';
@@ -6,6 +7,7 @@ import { StaticRouter } from 'react-router';
 
 import Application from '../../client/components/Application';
 import config from '../../../config';
+import environment from '../../environment';
 
 
 export default (app) => {
@@ -19,9 +21,11 @@ export default (app) => {
         location={ request.baseUrl }
         context={ context }
       >
-        <Application />
+        <Application environment={ environment } />
       </StaticRouter>
     ));
+
+    const helmet = Helmet.renderStatic();
 
     if (response.locals.webpackDevMiddleware) {
       stats = JSON.parse(response.locals.webpackDevMiddleware.fileSystem.readFileSync(path.resolve(config.secure.application.public, './build/stats.json')).toString());
@@ -44,6 +48,6 @@ export default (app) => {
     const configuration = Object.assign({}, config);
     delete configuration.secure;
 
-    return response.status(200).render('index', { assets, body, config: configuration });
+    return response.status(200).render('index', { assets, body, config: configuration, helmet });
   });
 };

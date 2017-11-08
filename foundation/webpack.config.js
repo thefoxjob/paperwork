@@ -1,8 +1,10 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import FlowWebpackPlugin from 'flow-webpack-plugin';
 import HappyPack from 'happypack';
 import nodeExternals from 'webpack-node-externals';
 import path from 'path';
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
 
 import config from './config';
@@ -72,7 +74,9 @@ const configuration = {
     ],
   },
   plugins: [
+    new BundleAnalyzerPlugin({ analyzerMode: 'static', defaultSizes: 'gzip', openAnalyzer: false, logLevel: 'silent' }),
     new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
+    new FlowWebpackPlugin(),
     new HappyPack({
       loaders: [
         {
@@ -132,8 +136,6 @@ const client = {
     }),
     ...config.debug ?
       [
-        // eslint-disable-next-line global-require
-        new (require('webpack-error-notification'))('darwin'),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),

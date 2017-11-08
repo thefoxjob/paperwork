@@ -4,7 +4,7 @@ import Auth from './Auth';
 
 class AuthServiceProvider extends ServiceProvider {
   register() {
-    this.ioc.bind('Auth', (ioc, params) => {
+    this.ioc.bind('Auth', (ioc, params: Object) => {
       const config = ioc.make('config');
       const options = config.secure.modules.auth;
       const adapter = ioc.make('AuthAdapter', { request: params.request, options });

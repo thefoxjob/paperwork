@@ -8,8 +8,8 @@ import resolvers from '../../../graphql/resolvers';
 
 export default async (app) => {
   const executableSchema = makeExecutableSchema({
-    typeDefs: await schemas(),
-    resolvers: await resolvers(),
+    typeDefs: schemas,
+    resolvers,
   });
 
   const graphqlServer = graphqlExpress((request) => {

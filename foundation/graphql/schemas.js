@@ -5,29 +5,42 @@ import page from './types/page';
 import relay from './types/relay';
 
 
-export default async () => {
-  const types = [page, relay];
+const types = [page, relay];
 
-  await fs.readdirSync(path.resolve(process.cwd(), 'application/graphql/types')).forEach(async (file) => {
-    const type = await import(`application/graphql/types/${ file }`);
-
-    types.push(type.default ? type.default : type);
+if (fs.existsSync(path.resolve(process.cwd(), 'application/graphql/types'))) {
+  fs.readdirSync(path.resolve(process.cwd(), 'application/graphql/types')).forEach((file) => {
+    if (/.js$/.test(file)) {
+      try {
+        // eslint-disable-next-line global-require, import/no-dynamic-require
+        const type = require(`application/graphql/types/${ file }`);
+        types.push(type.default ? type.default : type);
+      } catch (error) {
+        // skip
+      }
+    }
   });
+}
 
-  const Schema = `
+const queries = types.map(type => type.queries).filter(query => query);
+const mutations = types.map(type => type.mutations).filter(mutation => mutation);
+
+const Schema = `
+  ${ queries.length > 0 ? `
     type Query {
-      ${ types.map(type => type.queries) }
+      ${ types.map(type => type.queries).filter(query => query) }
     }
+  ` : '' }
 
+  ${ mutations.length > 0 ? `
     type Mutation {
-      ${ types.map(type => type.mutations) }
+      ${ mutations }
     }
+  ` : '' }
 
-    schema {
-      query: Query
-      mutation: Mutation
-    }
-  `;
+  schema {
+    ${ queries.length > 0 ? 'query: Query' : '' }
+    ${ mutations.length > 0 ? 'mutation: Mutation' : '' }
+  }
+`;
 
-  return [Schema, ...types.map(type => type.schemas)];
-};
+export default [Schema, ...types.map(type => type.schemas)];

@@ -1,10 +1,18 @@
 export default {
-  setup: async () => {
+  setup: () => {
     try {
-      const routes = await import('application/routes');
+      // eslint-disable-next-line import/no-unresolved, global-require
+      const routes = require('../../../../../../../application/routes').default;
       return routes.default ? routes.default : routes;
     } catch (error) {
-      return [];
+      try {
+        // eslint-disable-next-line import/no-unresolved, global-require
+        const routes = require('../../../application/routes').default;
+        return routes.default ? routes.default : routes;
+      } catch (innerError) {
+        console.log(innerError);
+        return [];
+      }
     }
   },
 };

@@ -18,7 +18,7 @@ class Translator {
       const country = this.request.country ? this.request.country.toLowerCase() : null;
       const language = this.request.language ? this.request.language.toLowerCase() : 'en';
 
-      for (let i = 0; i < keys.length; i + 1) {
+      for (let i = 0; i < keys.length; i += 1) {
         const value = keys[i];
 
         if (value.locale === `${ language }-${ country }`) {

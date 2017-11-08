@@ -22,7 +22,7 @@ const schemas = `
   }
 
   type Page {
-    uri: String
+    path: String
     name: String
     meta: PageMeta
     directories: [PageDirectory]

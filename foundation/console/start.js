@@ -49,6 +49,7 @@ const transformWebpackCompilationError = (error) => {
     console.error(`    * ${ error.message }`);
   } else {
     console.error(` > ${ chalk.bgRed( ' Error ') } ${ error.message }`);
+    console.error(error);
   }
 };
 

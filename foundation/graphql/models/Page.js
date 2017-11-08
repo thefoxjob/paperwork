@@ -4,7 +4,7 @@ import LocaleAwareField from '../../i18n/models/LocaleAwareField';
 
 
 const schema = mongoose.Schema({
-  uri: { type: String, unique: true },
+  path: { type: String, unique: true },
   name: LocaleAwareField,
   meta: {
     title: LocaleAwareField,
@@ -34,4 +34,4 @@ const schema = mongoose.Schema({
   parent: mongoose.Schema.Types.ObjectId,
 });
 
-export default mongoose.model('Page', schema);
+export default mongoose.models.Page || mongoose.model('Page', schema);
