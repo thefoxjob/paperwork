@@ -4,24 +4,36 @@ import ReactDOMServer from 'react-dom/server';
 import fs from 'fs';
 import path from 'path';
 import { StaticRouter } from 'react-router';
+import { fetchQuery } from 'react-relay';
+import { matchRoutes } from 'react-router-config';
 
 import Application from '../../client/components/Application';
 import config from '../../../config';
 import environment from '../../environment';
+import router from '../../client/router';
 
 
 export default (app) => {
-  app.use('*', (request, response) => {
+  app.use('*', async (request, response) => {
     let stats = null;
     const assets = { scripts: [], stylesheets: [] };
     const context = {};
+
+    const routes = router.setup();
+    const branch = matchRoutes(routes, request.path);
+
+    branch.forEach(async ({ route, match }) => {
+      if (route.query) {
+        await fetchQuery(environment, route.query, typeof (route.variables) === 'function' ? route.variables(match.params) : route.variables);
+      }
+    });
 
     const body = ReactDOMServer.renderToString((
       <StaticRouter
         location={ request.baseUrl }
         context={ context }
       >
-        <Application environment={ environment } />
+        <Application branch={ branch } environment={ environment } />
       </StaticRouter>
     ));
 
