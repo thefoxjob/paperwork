@@ -61,6 +61,7 @@ Meta.propTypes = {
   image: PropTypes.string,
   title: PropTypes.string,
   type: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
   meta: PropTypes.array,
 };
 

@@ -3,6 +3,10 @@
     "parser": "babel-eslint",
     "plugins": ["flowtype"],
     "rules": {
+		"jsx-a11y/anchor-is-valid": [ "error", {
+            "components": [ "Link" ],
+            "specialLink": ["to"]
+        }],
         "max-len": [2, 180],
         "object-curly-newline": [0, {
             ObjectExpression: { minProperties: 4, multiline: true, consistent: true },

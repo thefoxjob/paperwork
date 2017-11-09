@@ -10,7 +10,6 @@ export default {
         const routes = require('../../../application/routes').default;
         return routes.default ? routes.default : routes;
       } catch (innerError) {
-        console.log(innerError);
         return [];
       }
     }
