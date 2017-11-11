@@ -10,7 +10,7 @@ export default {
     let file = null;
 
     if (fs.existsSync(location)) {
-      file = fs.readFileSync(location.replace(/\./g, '/'));
+      file = fs.readFileSync(`${ location.replace(/\./g, '/') }.ejs`);
     } else {
       file = fs.readFileSync(`${ path.resolve(config.secure.template.source, location.replace(/\./g, '/')) }.ejs`);
     }

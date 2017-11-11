@@ -8,6 +8,7 @@ class MongooseServiceProvider extends ServiceProvider {
     const options = config.secure.modules.mongoose;
 
     mongoose.connect(options.url, Object.assign(options.options, { useMongoClient: true }));
+    mongoose.Promise = Promise;
 
     this.ioc.bindInstance('mongoose', () => mongoose);
   }
