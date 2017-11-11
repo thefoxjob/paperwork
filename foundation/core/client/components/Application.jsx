@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import QueryRenderer from 'relay-query-lookup-renderer';
+import React from 'react';
 
 
 class Application extends React.Component {

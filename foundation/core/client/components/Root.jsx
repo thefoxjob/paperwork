@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import Application from './Application';
 
 
-class Root extends React.Component {
+class Root extends React.PureComponent {
   static propTypes = {
     environment: PropTypes.oneOfType([
       PropTypes.object,

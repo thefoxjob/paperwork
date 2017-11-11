@@ -7,14 +7,24 @@ import path from 'path';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import { exec } from 'child_process';
 
 import config from '../config';
+import relay from './relay';
 import webpackConfig from '../webpack.config';
 
 
 const requestShortener = new RequestShortener(process.cwd());
 const options = {
   // ignored: /node_modules/,
+};
+
+const runRelayCompiler = async () => {
+  const bin = path.resolve(process.cwd(), './node_modules/.bin');
+  const source = path.resolve(process.cwd(), './application');
+  const schemas = path.resolve(process.cwd(), './build/schemas.json');
+
+  await exec(`${ bin }/relay-compiler --src ${ source } --schema ${ schemas } --extensions js jsx`);
 };
 
 const transformWebpackCompilationError = (error) => {
@@ -53,13 +63,17 @@ const transformWebpackCompilationError = (error) => {
   }
 };
 
-const createCompilationPromise = (name, compiler) => new Promise((resolve, reject) => {
+const createCompilationPromise = (name, compiler, events) => new Promise((resolve, reject) => {
   const progress = new clui.Spinner(`${ chalk.bgBlue(' Compiling ') } ${ name } script...`);
   let start = new Date();
 
   compiler.plugin('compile', () => {
     start = new Date();
     progress.start();
+
+    if (events && typeof (events.compile) === 'function') {
+      events.compile();
+    }
   });
 
   compiler.plugin('done', (stats) => {
@@ -101,8 +115,13 @@ const execute = async () => {
   compilers.client = compile.compilers.find(compiler => compiler.name === 'client');
   compilers.server = compile.compilers.find(compiler => compiler.name === 'server');
 
-  promises.client = createCompilationPromise('client', compilers.client, webpackConfig.client);
-  promises.server = createCompilationPromise('server', compilers.server, webpackConfig.server);
+  promises.client = createCompilationPromise('client', compilers.client);
+  promises.server = createCompilationPromise('server', compilers.server, {
+    compile: async () => {
+      await relay();
+      await runRelayCompiler();
+    },
+  });
 
   const devMiddleware = webpackDevMiddleware(compilers.client, {
     options,
@@ -208,5 +227,6 @@ const execute = async () => {
     return false;
   }
 };
+
 
 export default execute;

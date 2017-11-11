@@ -9,7 +9,7 @@ import { matchRoutes } from 'react-router-config';
 
 import Application from '../../client/components/Application';
 import config from '../../../config';
-import environment from '../../environment';
+import getEnvironment from '../../environment';
 import router from '../../client/router';
 
 
@@ -19,14 +19,22 @@ export default (app) => {
     const assets = { scripts: [], stylesheets: [] };
     const context = {};
 
+    const promises = [];
     const routes = router.setup();
     const branch = matchRoutes(routes, request.path);
+    const environment = getEnvironment(`${ request.protocol }://${ request.hostname }${ config.secure.application.port !== 80 ? `:${ config.secure.application.port }` : '' }`);
 
-    branch.forEach(async ({ route, match }) => {
+    branch.forEach(({ route, match }) => {
       if (route.query) {
-        await fetchQuery(environment, route.query, typeof (route.variables) === 'function' ? route.variables(match.params) : route.variables);
+        promises.push(fetchQuery(environment, route.query, typeof (route.variables) === 'function' ? route.variables(match.params) : route.variables));
       }
     });
+
+    try {
+      await Promise.all(promises);
+    } catch (error) {
+      // TODO: log
+    }
 
     const body = ReactDOMServer.renderToString((
       <StaticRouter

@@ -6,7 +6,8 @@ const command = require('../foundation/console').default;
 
 process.stdout.write(chalk.green('-'.repeat(120)));
 process.stdout.write('\x1B[2J\n\x1B[0f\u001b[0;0H');
-
+// eslint-disable-next-line no-console
+process.on('unhandledRejection', error => console.error(error));
 
 const run = (module, options) => {
   const pretty = new PrettyError();
