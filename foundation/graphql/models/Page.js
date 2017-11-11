@@ -6,13 +6,13 @@ import LocaleAwareField from '../../i18n/models/LocaleAwareField';
 const schema = mongoose.Schema({
   path: { type: String, unique: true },
   name: LocaleAwareField,
-  meta: {
+  meta: mongoose.Schema({
     title: LocaleAwareField,
     description: LocaleAwareField,
     keyword: LocaleAwareField,
     image: String,
     type: String,
-  },
+  }),
   related: [
     {
       type: {
