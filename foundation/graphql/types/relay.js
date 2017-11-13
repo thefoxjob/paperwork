@@ -21,4 +21,4 @@ const schemas = `
   }
 `;
 
-export default { schemas };
+export default { queries, schemas };
