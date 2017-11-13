@@ -67,3 +67,5 @@ export const connectionFromArray = (data, args, meta = {}) => {
 export const mutateAndGetPayload = (input, payload) => Object.assign({ clientMutationId: input.clientMutationId }, payload);
 
 export const globalIdFieldResolver = (root, _args, _context, info) => toGlobalId(info.parentType, root.id);
+
+export default { connectionArguments, connectionFromArray, globalIdFieldResolver, makeConnection, mutateAndGetPayload, mutationWithClientMutationId };
