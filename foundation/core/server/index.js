@@ -1,6 +1,5 @@
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import path from 'path';
 
 import config from '../../config';
 import register from './register';
@@ -21,27 +20,49 @@ app.use(express.static(config.secure.application.public));
 app.ioc = register(app);
 
 app.use((request, response, next) => {
+  if ( ! config.secure.application.rules.www || ! config.secure.application.rules.backslash) {
+    const host = request.header('x-forwarded-host') || request.hostname;
+
+    // eslint-disable-next-line max-len
+    if (( ! config.secure.application.rules.www && host.match(/^www\..*/i)) || ( ! config.secure.application.rules.backslash && request.path.endsWith('/') && request.path.length > 1)) {
+      const route = config.secure.application.rules.backslash ? request.path : request.path.replace(/\/$/i, '');
+      const queries = request.url.replace(request.path, '');
+
+      return response.redirect(301, `${ request.protocol }://${ config.secure.application.rules.www ? host : host.replace(/^www\./i, '') }${ route || '/' }${ queries || '' }`);
+    }
+  }
+
+  return next();
+});
+
+app.use((request, response, next) => {
   request.modules = {};
-  request.modules.service = app.ioc.make('restful', { request });
   request.modules.auth = app.ioc.make('auth', { request });
+  request.modules.currency = app.ioc.make('currency', { request });
   request.modules.i18n = app.ioc.make('i18n', { request });
+  request.modules.restful = app.ioc.make('restful', { request });
 
   next();
 });
 
 try {
-  const relative = path.relative(__dirname, process.cwd());
   let middleware = null;
 
-  if (relative === '../../..') {
+  try {
     // eslint-disable-next-line global-require, import/no-unresolved
     middleware = require('../../../application/middleware/server');
-  } else if (relative === '../../../../../../..') {
-    // eslint-disable-next-line global-require, import/no-unresolved
-    middleware = require('../../../../../../../application/middleware/server');
+  } catch (error) {
+    // skip
   }
 
-  middleware = middleware.default ? middleware.default : middleware;
+  try {
+    // eslint-disable-next-line global-require, import/no-unresolved
+    middleware = require('../../../../../../../application/middleware/server');
+  } catch (error) {
+    // skip
+  }
+
+  middleware = middleware && middleware.default ? middleware.default : middleware;
   middleware(app);
 } catch (error) {
   // skip

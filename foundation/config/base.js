@@ -10,6 +10,10 @@ export default {
   },
   secure: {
     application: {
+      rules: {
+        www: false,
+        blackslash: false,
+      },
       port: 3000,
       public: path.resolve(process.cwd(), 'public'),
     },

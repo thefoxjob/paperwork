@@ -1,4 +1,5 @@
 import ServiceProvider from '@thefoxjob/js-service-provider';
+
 import Auth from './Auth';
 
 

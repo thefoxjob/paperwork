@@ -8,10 +8,12 @@ import path from 'path';
 let config = Object.assign({}, {
   adapters: {
     AuthAdapter: require('../auth/adapters/MemoryAuthAdapter').default,
+    CurrencyAdapter: require('../currency/adapters/SimpleCurrencyAdapter').default,
     NotificationAdapter: require('../notification/adapters/SlackNotificationAdapter').default,
   },
   providers: {
     Auth: require('../auth/AuthServiceProvider').default,
+    Currency: require('../currency/CurrencyServiceProvider').default,
     I18n: require('../i18n/I18nServiceProvider').default,
     Mongoose: require('../mongoose/MongooseServiceProvider').default,
     Notification: require('../notification/NotificationServiceProvider').default,
@@ -19,23 +21,19 @@ let config = Object.assign({}, {
   },
 });
 
-const relative = path.relative(__dirname, process.cwd());
-
 if (fs.existsSync(path.resolve(process.cwd(), './application/config/modules.js'))) {
-  if (relative === '../..') {
-    try {
-      // eslint-disable-next-line import/no-unresolved
-      config = merge(config, require('../../application/config/modules'));
-    } catch (error) {
-      // skip
-    }
-  } else if (relative === '../../../../../..') {
-    try {
-      // eslint-disable-next-line import/no-unresolved
-      config = merge(config, require('../../../../../../application/config/modules'));
-    } catch (error) {
-      // skip
-    }
+  try {
+    // eslint-disable-next-line import/no-unresolved
+    config = merge(config, require('../../application/config/modules'));
+  } catch (error) {
+    // skip
+  }
+
+  try {
+    // eslint-disable-next-line import/no-unresolved
+    config = merge(config, require('../../../../../../application/config/modules'));
+  } catch (error) {
+    // skip
   }
 }
 
