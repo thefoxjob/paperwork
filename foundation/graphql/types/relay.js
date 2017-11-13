@@ -1,4 +1,12 @@
+const queries = `
+  node(id: ID!): Node
+`;
+
 const schemas = `
+  interface Node {
+    id: ID!
+  }
+
   type PageInfo {
     startCursor: String
     endCursor: String
