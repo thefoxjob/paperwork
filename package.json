@@ -1,6 +1,6 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.60",
+  "version": "0.0.1-alpha.66",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,9 @@
     "dom",
     "dom.js",
     "index.js",
+    "i18n",
+    "i18n.js",
+    "models",
     ".templates"
   ],
   "bin": {

@@ -25,6 +25,16 @@ class Currency {
 
     return `${ symbol || to.toUpperCase() }${ from ? this.exchange(price, to, from, round) : price }`;
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  toCurrency(price: String | Number, round: Boolean = true) {
+    if (typeof (price) !== 'number') {
+      // eslint-disable-next-line no-param-reassign
+      price = Number.parseFloat(price);
+    }
+
+    return round ? Math.round(price) : price.toFixed(2);
+  }
 }
 
 export default Currency;

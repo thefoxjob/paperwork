@@ -13,10 +13,11 @@ export default async (app) => {
   });
 
   const graphqlServer = graphqlExpress((request) => {
-    const context = { request, modules: request.modules };
+    const context = { request, ...request.modules };
 
     return {
       schema: executableSchema,
+      rootValue: { ioc: app.ioc },
       context,
     };
   });
