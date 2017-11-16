@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import page from './types/page';
-import relay from './types/relay';
+import relay from '../relay/graphql/types/relay';
 
 
 const types = [page, relay];
@@ -15,7 +15,8 @@ if (fs.existsSync(path.resolve(process.cwd(), 'application/graphql/types'))) {
         const type = require(`application/graphql/types/${ file }`);
         types.push(type.default ? type.default : type);
       } catch (error) {
-        // skip
+        // eslint-disable-next-line no-console
+        console.trace(error.stack);
       }
     }
   });

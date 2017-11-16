@@ -1,6 +1,8 @@
 import { cursorToOffset, offsetToCursor, toGlobalId } from 'graphql-relay';
 
 
+export { cursorToOffset, offsetToCursor, toGlobalId };
+
 export const makeConnection = (name, fields = null) => `
   type ${ name }Edge {
     cursor: String

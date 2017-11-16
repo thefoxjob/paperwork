@@ -1,6 +1,6 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.1-alpha.66",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
     "index.js",
     "i18n",
     "i18n.js",
+    "log.js",
     "models",
     ".templates"
   ],

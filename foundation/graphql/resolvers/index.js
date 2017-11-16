@@ -17,7 +17,8 @@ if (fs.existsSync(path.resolve(process.cwd(), 'application/graphql/resolvers')))
         const resolver = require(`application/graphql/resolvers/${ file }`);
         _.merge(resolvers, resolver.default ? resolver.default : resolver);
       } catch (error) {
-        // skip
+        // eslint-disable-next-line no-console
+        console.trace(error.stack);
       }
     }
   });

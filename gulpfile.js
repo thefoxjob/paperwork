@@ -22,3 +22,8 @@ gulp.task('watch-foundation', () => gulp.watch('foundation/**/*', gulp.parallel(
 gulp.task('default', gulp.parallel('binary', 'foundation'));
 gulp.task('release', gulp.series('clean', 'default'));
 gulp.task('watch', gulp.parallel('default', 'watch-binary', 'watch-foundation'));
+
+
+gulp.task('compile', () => {
+
+});

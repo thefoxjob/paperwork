@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use(session(config.secure.session));
 app.use(express.static(config.secure.application.public));
 
-app.ioc = register(app);
+app.service = register(app);
 
 app.use((request, response, next) => {
   if ( ! config.secure.application.rules.www || ! config.secure.application.rules.backslash) {
@@ -33,16 +33,6 @@ app.use((request, response, next) => {
   }
 
   return next();
-});
-
-app.use((request, response, next) => {
-  request.modules = {};
-  request.modules.auth = app.ioc.make('auth', { request });
-  request.modules.currency = app.ioc.make('currency', { request });
-  request.modules.i18n = app.ioc.make('i18n', { request });
-  request.modules.restful = app.ioc.make('restful', { request });
-
-  next();
 });
 
 try {

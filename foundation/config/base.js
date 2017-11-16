@@ -3,11 +3,6 @@ import path from 'path';
 
 export default {
   debug: ! process.env.NODE_ENV || process.argv.includes('--debug'),
-  references: {
-    countries: [],
-    currencies: [],
-    sites: [],
-  },
   secure: {
     application: {
       rules: {
@@ -45,6 +40,9 @@ export default {
           },
         },
         default: 'slack',
+      },
+      relay: {
+        use: true,
       },
       restful: {
         endpoints: {},
