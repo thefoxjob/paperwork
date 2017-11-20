@@ -1,6 +1,6 @@
 {
   "name": "@thefoxjob/paperwork",
-  "version": "0.0.2",
+  "version": "0.0.3-alpha.13",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,16 +13,17 @@
   "author": "Edward Khor",
   "license": "MIT",
   "files": [
+    "adapters",
     "client",
-    "client.js",
+    "config.js",
     "dist",
     "dom",
-    "dom.js",
     "index.js",
     "i18n",
-    "i18n.js",
     "log.js",
     "models",
+    "relay.js",
+    "templates.js",
     ".templates"
   ],
   "bin": {

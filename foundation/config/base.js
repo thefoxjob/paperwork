@@ -50,9 +50,9 @@ export default {
       },
     },
     session: {
-      secret: 'important_change_this',
       age: 720000,
       cache: 'session',
+      secret: 'important_change_this',
     },
     template: {
       engine: 'ejs',

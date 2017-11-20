@@ -4,7 +4,7 @@ import Page from '../models/Page';
 const resolvers = {
   Query: {
     page: async (root, args, context) => {
-      const { i18n } = context.modules;
+      const { i18n } = context;
       const page = await Page.findOne({ path: args.path }).exec();
 
       if (page) {

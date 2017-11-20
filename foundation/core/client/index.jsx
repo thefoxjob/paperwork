@@ -13,5 +13,5 @@ import('application/middleware/client')
     const routes = router.setup();
     const environment = getEnvironment();
 
-    ReactDOM.render(<BrowserRouter><Root environment={ environment } routes={ routes } /></BrowserRouter>, document.getElementById('root'));
+    ReactDOM.hydrate(<BrowserRouter><Root environment={ environment } routes={ routes } /></BrowserRouter>, document.getElementById('root'));
   });

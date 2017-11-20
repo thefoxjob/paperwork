@@ -15,7 +15,7 @@ class Restful {
 
   api(name) {
     if ( ! this.restful[name]) {
-      const endpoint = this.endpoint[name];
+      const endpoint = this.endpoints[name];
       const api = restful(endpoint.baseUrl, requestBackend(HTTPClient));
 
       api.addRequestInterceptor((request) => {
@@ -64,7 +64,7 @@ class Restful {
   }
 
   execute(name, { params = {}, queries = {}, payloads = {}, headers = {} } = {}) {
-    const service = this.services[name];
+    const service = _.get(this.services, name);
 
     if ( ! service) {
       throw new ReferenceError(`[Service Module] Service "${ name }" not found.`);

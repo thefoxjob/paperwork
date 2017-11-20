@@ -15,13 +15,15 @@ export default async (app) => {
   const graphqlServer = graphqlExpress((request) => {
     const context = {
       auth: app.service.make('auth', { request }),
+      currency: app.service.make('currency', { request }),
       i18n: app.service.make('i18n', { request }),
+      restful: app.service.make('restful', { request }),
+      service: app.service,
       request,
     };
 
     return {
       schema: executableSchema,
-      rootValue: { service: app.service },
       context,
     };
   });

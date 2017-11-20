@@ -1,7 +1,7 @@
-import { cursorToOffset, offsetToCursor, toGlobalId } from 'graphql-relay';
+import { cursorToOffset, fromGlobalId, offsetToCursor, toGlobalId } from 'graphql-relay';
 
 
-export { cursorToOffset, offsetToCursor, toGlobalId };
+export { cursorToOffset, fromGlobalId, offsetToCursor, toGlobalId };
 
 export const makeConnection = (name, fields = null) => `
   type ${ name }Edge {
@@ -70,4 +70,4 @@ export const mutateAndGetPayload = (input, payload) => Object.assign({ clientMut
 
 export const globalIdFieldResolver = (root, _args, _context, info) => toGlobalId(info.parentType, root.id);
 
-export default { connectionArguments, connectionFromArray, globalIdFieldResolver, makeConnection, mutateAndGetPayload, mutationWithClientMutationId };
+export default { connectionArguments, connectionFromArray, fromGlobalId, globalIdFieldResolver, makeConnection, mutateAndGetPayload, mutationWithClientMutationId };

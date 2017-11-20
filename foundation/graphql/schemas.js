@@ -15,8 +15,10 @@ if (fs.existsSync(path.resolve(process.cwd(), 'application/graphql/types'))) {
         const type = require(`application/graphql/types/${ file }`);
         types.push(type.default ? type.default : type);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.trace(error.stack);
+        if (error.code !== 'MODULE_NOT_FOUND') {
+          // eslint-disable-next-line no-console
+          console.error(error);
+        }
       }
     }
   });
