@@ -8,7 +8,8 @@ class AuthServiceProvider extends ServiceProvider {
     this.ioc.bind('Auth', (ioc, params: Object) => {
       const config = ioc.make('config');
       const options = config.secure.modules.auth;
-      const adapter = ioc.make('AuthAdapter', { request: params.request, options });
+      const Adapter = ioc.make('AuthAdapter');
+      const adapter = new Adapter(params.request, options);
 
       return new Auth(params.request, adapter);
     });

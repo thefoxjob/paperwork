@@ -44,7 +44,7 @@ class Auth {
     }));
   }
 
-  async user(refresh) {
+  user(refresh) {
     return this.adapter.user(refresh);
   }
 }
