@@ -32,7 +32,7 @@ const Image = (props) => {
       src = `${ src } ${ image.descriptor }`;
     }
 
-    return src;
+    return encodeURI(src);
   };
 
   if (Array.isArray(props.src)) {

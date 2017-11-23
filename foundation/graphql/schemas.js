@@ -12,7 +12,7 @@ if (fs.existsSync(path.resolve(process.cwd(), 'application/graphql/types'))) {
     if (/.js$/.test(file)) {
       try {
         // eslint-disable-next-line global-require, import/no-dynamic-require
-        const type = require(`application/graphql/types/${ file }`);
+        const type = require(`../../../../../../application/graphql/types/${ file }`);
         types.push(type.default ? type.default : type);
       } catch (error) {
         if (error.code !== 'MODULE_NOT_FOUND') {

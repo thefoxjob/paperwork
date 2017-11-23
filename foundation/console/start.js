@@ -7,7 +7,6 @@ import path from 'path';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
-import { exec } from 'child_process';
 
 import config from '../config';
 import relay from './relay';
@@ -17,14 +16,6 @@ import webpackConfig from '../webpack.config';
 const requestShortener = new RequestShortener(process.cwd());
 const options = {
   // ignored: /node_modules/,
-};
-
-const runRelayCompiler = async () => {
-  const bin = path.resolve(process.cwd(), './node_modules/.bin');
-  const source = path.resolve(process.cwd(), './application');
-  const schemas = path.resolve(process.cwd(), './build/schemas.json');
-
-  await exec(`${ bin }/relay-compiler --src ${ source } --schema ${ schemas } --extensions js jsx`);
 };
 
 const transformWebpackCompilationError = (error) => {
@@ -104,6 +95,8 @@ const execute = async () => {
     return server;
   }
 
+  await relay();
+
   const app = { instance: null, promise: null, resolved: true };
   const compilers = { client: null, server: null };
   const promises = { client: null, server: null };
@@ -119,7 +112,6 @@ const execute = async () => {
   promises.server = createCompilationPromise('server', compilers.server, {
     compile: async () => {
       await relay();
-      await runRelayCompiler();
     },
   });
 
