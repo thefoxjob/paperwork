@@ -1,43 +1,17 @@
-import fs from 'fs';
-import merge from 'deepmerge';
-import path from 'path';
+/* eslint-env browser */
+import { pathOr } from 'ramda';
 
-import base from './base';
+export default {
+  get: (key, fallback = null) => {
+    if (typeof (window) !== 'undefined') {
+      const config = JSON.parse(atob(window.config));
 
+      return pathOr(fallback, key.split('.'), config);
+    }
 
-// eslint-disable-next-line import/no-mutable-exports
-let config = Object.assign({}, base);
+    // eslint-disable-next-line global-require
+    const config = require('config');
 
-if (fs.existsSync(path.resolve(process.cwd(), './application/config/base.js'))) {
-  try {
-    // eslint-disable-next-line global-require, import/no-unresolved
-    config = merge(config, require('../../application/config/base'));
-  } catch (error) {
-    // skip
-  }
-
-  try {
-    // eslint-disable-next-line global-require, import/no-unresolved
-    config = merge(config, require('../../../../../../application/config/base'));
-  } catch (error) {
-    // skip
-  }
-}
-
-if (process.env.NODE_ENV && fs.existsSync(path.resolve(process.cwd(), `./application/config/${ process.env.NODE_ENV.toLowerCase() }.js`))) {
-  try {
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    config = merge(config, require(`../../application/config/${ process.env.NODE_ENV.toLowerCase() }`));
-  } catch (error) {
-    // skip
-  }
-
-  try {
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    config = merge(config, require(`../../../../../../application/config/${ process.env.NODE_ENV.toLowerCase() }`));
-  } catch (error) {
-    // skip
-  }
-}
-
-export default config;
+    return config.get(`public.${ key }`, fallback);
+  },
+};

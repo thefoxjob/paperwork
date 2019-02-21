@@ -1,73 +1,71 @@
 import Helmet from 'react-helmet';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import config from 'config';
 import fs from 'fs';
 import path from 'path';
 import { StaticRouter } from 'react-router';
-import { fetchQuery } from 'react-relay';
+import { fetchQuery } from 'relay-runtime';
 import { matchRoutes } from 'react-router-config';
 
-import Application from '../../client/components/Application';
-import config from '../../../config';
-import getEnvironment from '../../environment';
-import router from '../../client/router';
+import Environment from '../../environment';
+import RelayContext from '../../../contexts/RelayContext';
+import Root from '../../client/components/Root';
+import routes from '../../../../src/routes';
 
 
 export default (app) => {
-  app.use('*', async (request, response) => {
-    let stats = null;
+  app.get('*', async (request, response) => {
     const assets = { scripts: [], stylesheets: [] };
     const context = {};
 
     const promises = [];
-    const routes = router.setup();
     const branch = matchRoutes(routes, request.path);
-    const environment = getEnvironment(`${ request.protocol }://${ request.hostname }${ config.secure.application.port !== 80 ? `:${ config.secure.application.port }` : '' }`);
+    const environment = Environment.instance(config.get('public.graphql.endpoint'));
+    const location = { pathname: request.path, query: request.query };
 
     branch.forEach(({ route, match }) => {
       if (route.query) {
-        promises.push(fetchQuery(environment, route.query, typeof (route.variables) === 'function' ? route.variables(match.params) : route.variables));
+        promises.push(fetchQuery(
+          environment,
+          route.query,
+          typeof (route.variables) === 'function' ? route.variables({ params: match.params, ...location }) : route.variables,
+        ));
       }
     });
 
     try {
       await Promise.all(promises);
     } catch (error) {
-      // TODO: log
+      console.error(error);
     }
 
     const body = ReactDOMServer.renderToString((
-      <StaticRouter
-        location={ request.baseUrl }
-        context={ context }
-      >
-        <Application branch={ branch } environment={ environment } />
-      </StaticRouter>
+      <RelayContext.Provider value={{ environment }}>
+        <StaticRouter
+          location={ request.baseUrl }
+          context={ context }
+        >
+          <Root environment={ environment } routes={ routes } />
+        </StaticRouter>
+      </RelayContext.Provider>
     ));
 
     const helmet = Helmet.renderStatic();
+    const chunks = JSON.parse(fs.readFileSync(path.resolve(config.get('application.public'), './build/chunk-manifest.json')).toString());
 
-    if (response.locals.webpackDevMiddleware) {
-      stats = JSON.parse(response.locals.webpackDevMiddleware.fileSystem.readFileSync(path.resolve(config.secure.application.public, './build/stats.json')).toString());
-    } else if (fs.existsSync(path.resolve(config.secure.application.public, './build/stats.json'))) {
-      stats = JSON.parse(fs.readyFileSync(path.resolve(config.secure.application.public, './build/stats.json')).toString());
-    }
-
-    stats.chunks.forEach(chunk => chunk.files.forEach((file) => {
-      if (/.css($|\?)/.test(file)) {
-        assets.stylesheets.push(path.join(stats.publicPath, file));
-      } else if (/.js($|\?)/.test(file)) {
-        if (chunk.entry) {
-          assets.scripts.unshift(path.join(stats.publicPath, file));
-        } else {
-          assets.scripts.push(path.join(stats.publicPath, file));
-        }
+    Object.values(chunks).forEach(chunk => chunk.forEach((asset) => {
+      if (/.css($|\?)/.test(asset)) {
+        assets.stylesheets.push(asset);
+      } else if (/.js($|\?)/.test(asset)) {
+        assets.scripts.push(asset);
       }
     }));
 
-    const configuration = Object.assign({}, config);
-    delete configuration.secure;
+    const configuration = Object.assign({}, config.get('public'));
 
-    return response.status(200).render('index', { assets, body, config: configuration, helmet });
+    return response
+      .status(context.status ? context.status : 200)
+      .render('index', { assets, body, config: configuration, helmet });
   });
 };

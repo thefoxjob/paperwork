@@ -3,15 +3,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
+import Environment from '../environment';
+import RelayContext from '../../contexts/RelayContext';
 import Root from './components/Root';
-import getEnvironment from '../environment';
-import router from './router';
+import config from '../../config';
+import routes from '../../../src/routes';
 
 
-import('application/middleware/client')
+import('../../../src/middleware/client')
   .then(() => {
-    const routes = router.setup();
-    const environment = getEnvironment();
+    const environment = Environment.instance(config.get('graphql.endpoint'));
 
-    ReactDOM.hydrate(<BrowserRouter><Root environment={ environment } routes={ routes } /></BrowserRouter>, document.getElementById('root'));
+    ReactDOM.hydrate(
+      (
+        <RelayContext.Provider value={{ environment }}>
+          <BrowserRouter>
+            <Root environment={ environment } routes={ routes } />
+          </BrowserRouter>
+        </RelayContext.Provider>
+      ),
+      document.getElementById('root'),
+    );
   });

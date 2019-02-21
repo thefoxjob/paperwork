@@ -6,23 +6,32 @@ import { withRouter } from 'react-router';
 import Application from './Application';
 
 
-class Root extends React.PureComponent {
-  static propTypes = {
-    environment: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.func,
-    ]).isRequired,
-    // eslint-disable-next-line react/forbid-prop-types
-    location: PropTypes.object.isRequired,
-    // eslint-disable-next-line react/forbid-prop-types
-    routes: PropTypes.array.isRequired,
+const Root = (props) => {
+  let branch = props.branch;
+
+  if (! branch) {
+    branch = matchRoutes(props.routes, props.location.pathname);
   }
 
-  render() {
-    const branch = matchRoutes(this.props.routes, this.props.location.pathname);
+  return <Application branch={ branch } environment={ props.environment } />;
+};
 
-    return <Application branch={ branch } environment={ this.props.environment } />;
-  }
-}
+Root.defaultProps = {
+  branch: null,
+};
+
+Root.propTypes = {
+  branch: PropTypes.arrayOf(PropTypes.shape({
+    match: PropTypes.object.isRequired,
+    route: PropTypes.object.isRequired,
+  })),
+  // eslint-disable-next-line react/forbid-prop-types
+  environment: PropTypes.object.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  routes: PropTypes.array.isRequired,
+};
 
 export default withRouter(Root);

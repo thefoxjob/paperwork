@@ -1,19 +1,16 @@
 import PropTypes from 'prop-types';
-import QueryRenderer from 'relay-query-lookup-renderer';
 import React from 'react';
+import QueryRenderer from 'relay-query-lookup-renderer';
 
 
 class Application extends React.Component {
   static propTypes = {
-    branch: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.array,
-    ]).isRequired,
-    environment: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.func,
-    ]).isRequired,
-  }
+    branch: PropTypes.arrayOf(PropTypes.shape({
+      match: PropTypes.object.isRequired,
+      route: PropTypes.object.isRequired,
+    })).isRequired,
+    environment: PropTypes.object.isRequired,
+  };
 
   renderComponent(match, route, children = null) {
     if (route.query) {

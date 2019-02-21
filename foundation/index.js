@@ -1,5 +1,5 @@
 import config from './config';
-import templates from './templates';
-import log from './log';
+import contexts from './contexts';
 
-export { config, templates, log };
+
+export default { config, contexts };

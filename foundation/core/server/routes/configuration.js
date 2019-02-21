@@ -1,11 +1,8 @@
-import config from '../../../config';
+import config from 'config';
 
 
 export default (app) => {
   app.use('/configuration', (request, response) => {
-    const configuration = Object.assign({}, config);
-    delete configuration.secure;
-
-    response.send(Buffer.from(JSON.stringify(configuration)).toString('base64'));
+    response.send(Buffer.from(JSON.stringify(config.get('public'))).toString('base64'));
   });
 };
