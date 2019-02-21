@@ -1,0 +1,8 @@
+node_modules/
+__generated__/
+build/
+public/build/
+.env
+.DS_Store
+.nvmrc
+yarn-error.log
